@@ -2,12 +2,13 @@
 #include "libraries/Pulse/pulse.h"
 #include "libraries/infraredTemperature/infraredTemperature.h"
 #include "libraries/buzzer/bboobboo.h"
-
+#include "libraries/tempFunction/tempFunction.h"
 
 PulseSensor pulse;
 InfraredTemperature infraredTemp;
 Bboobboo buzzer;
 
+temp_func m_temp;
 int ledPin = 13;
 
 void setup() {
@@ -25,7 +26,7 @@ const int delayMsec = 60;
 
 // 온도 체크 딜레이
 int tempDelay = 0;
-
+int tempHumidDelay = 0;
 void loop()
 {
   static int beatMsec = 0;
@@ -53,8 +54,13 @@ void loop()
     
     tempDelay = 0;
   }
+    if(tempHumidDelay > 1000){
+    m_temp.temp_est();
    
+    tempHumidDelay = 0;
+  } 
   delay(delayMsec);
+  tempHumidDelay += delayMsec;
   tempDelay += delayMsec;
   beatMsec += delayMsec;
 }
