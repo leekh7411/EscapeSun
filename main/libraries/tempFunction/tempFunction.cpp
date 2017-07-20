@@ -1,14 +1,15 @@
 #include "DHT11.h" 
 #include "tempFunction.h"
-float temp_func::getHumi()
-{
-  DHT11 dht11(2); 
-  int err;    // result code
-  float temp, humi;   // tempera  ture, humidity
 
-  if((err=dht11.read(humi, temp))==0)
+void temp_func::temp_est()
+{
+  int err;    // result code
+  float temp_tmp, humi_tmp;   // tempera  ture, humidity
+
+  if((err=dht11.read(humi_tmp, temp_tmp))==0)
   {
-	return humi;
+	humi = humi_tmp;
+	temp = temp_tmp;
   }
   else
   {
@@ -19,21 +20,17 @@ float temp_func::getHumi()
   }
 }
 
-float temp_func::getTemp(){
- DHT11 dht11(2); 
-  int err;    // result code
-  float temp, humi;   // tempera  ture, humidity
 
-  if((err=dht11.read(humi, temp))==0)
-  {
+float temp_func::getHumi()
+{
+
+	return humi;
+
+}
+
+float temp_func::getTemp(){
+
 	return temp;
-  }
-  else
-  {
-    Serial.println();
-    Serial.print("Error No :");
-    Serial.print(err);
-    Serial.println();    
-  }
+
 }
 
