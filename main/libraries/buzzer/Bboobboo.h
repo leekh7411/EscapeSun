@@ -1,6 +1,6 @@
 
-#ifndef Bboobboo_h
-#define Bboobboo_h
+#ifndef bboobboo_h
+#define bboobboo_h
 
 #include "Arduino.h"
 

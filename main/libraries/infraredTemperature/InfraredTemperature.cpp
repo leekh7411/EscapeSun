@@ -27,7 +27,7 @@ void InfraredTemperature::printTempC()
   Serial.print(objectTempC);
 
   Serial.println("*C");
-  delay(1000);
+  //delay(1000);
 }
 
 void InfraredTemperature::checkTemp()

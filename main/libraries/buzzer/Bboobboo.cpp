@@ -1,5 +1,5 @@
 
-#include "Bboobboo.h"
+#include "bboobboo.h"
 
 Bboobboo::Bboobboo()
 {
@@ -10,7 +10,7 @@ Bboobboo::Bboobboo()
 
 void Bboobboo::turnOn()
 {
-   digitalWrite(pinNum, HIGH);   
+   digitalWrite(pinNum, HIGH);
    delay(1000);
 }
 
@@ -18,5 +18,4 @@ void Bboobboo::turnOn()
 void Bboobboo::turnOff()
 {
    digitalWrite(pinNum, LOW);  
-   delay(1000);
 }

@@ -1,16 +1,30 @@
 //#include <pulse.h>
 #include "libraries/Pulse/pulse.h"
+#include "libraries/infraredTemperature/infraredTemperature.h"
+#include "libraries/buzzer/bboobboo.h"
+
 
 PulseSensor pulse;
+InfraredTemperature infraredTemp;
+Bboobboo buzzer;
+
 int ledPin = 13;
 
 void setup() {
   // put your setup code here, to run once:
   pinMode(13, OUTPUT);
   Serial.begin(9600);
-}
 
+  infraredTemp = InfraredTemperature();
+  buzzer = Bboobboo();
+}
+ 
+
+//심박 수 측정을 위한 delay, loop()에서 전체적인 delay의 틀
 const int delayMsec = 60;
+
+// 온도 체크 딜레이
+int tempDelay = 0;
 
 void loop()
 {
@@ -30,6 +44,17 @@ void loop()
   // Note: I assume the sleep delay is way longer than the
   // number of cycles used to run the code hence the error
   // is negligible for math.
+
+  if(tempDelay > 2000){
+    infraredTemp.checkTemp();
+    
+    buzzer.turnOn();
+    buzzer.turnOff();
+    
+    tempDelay = 0;
+  }
+   
   delay(delayMsec);
+  tempDelay += delayMsec;
   beatMsec += delayMsec;
 }
