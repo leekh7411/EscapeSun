@@ -1,10 +1,10 @@
-#include<DHT11.h> 
+#include "../DHT11/DHT11.h" 
 #include "tempFunction.h"
 void temp_func::temp_est()
 {
   DHT11 dht11(2); 
   int err;    // result code
-  float temp, humi;   // temperature, humidity
+  float temp, humi;   // tempera  ture, humidity
 
   if((err=dht11.read(humi, temp))==0)
   {

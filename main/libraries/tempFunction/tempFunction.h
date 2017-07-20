@@ -1,3 +1,6 @@
+#ifndef tempFunction_h
+#define tempFunction_h
+
 class temp_func
 { 
 public:
@@ -15,3 +18,5 @@ public:
 public:
 	void temp_est();
 };
+
+#endif
