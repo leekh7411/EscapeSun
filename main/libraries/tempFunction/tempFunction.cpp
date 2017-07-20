@@ -1,4 +1,4 @@
-#include "../DHT11/DHT11.h" 
+#include "DHT11.h" 
 #include "tempFunction.h"
 void temp_func::temp_est()
 {

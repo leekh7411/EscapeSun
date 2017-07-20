@@ -1,8 +1,8 @@
 //#include <pulse.h>
-#include "libraries/Pulse/pulse.h"
-#include "libraries/infraredTemperature/infraredTemperature.h"
-#include "libraries/buzzer/bboobboo.h"
-#include "libraries/tempFunction/tempFunction.h"
+#include "pulse.h"
+#include "InfraredTemperature.h"
+#include "Bboobboo.h"
+#include "tempFunction.h"
 
 PulseSensor pulse;
 InfraredTemperature infraredTemp;

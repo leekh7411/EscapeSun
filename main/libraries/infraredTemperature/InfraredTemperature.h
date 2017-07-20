@@ -2,7 +2,7 @@
 #define InfraredTemperature_h
 
 #include <Wire.h>
-#include "Adafruit-MLX90614\Adafruit_MLX90614.h"
+#include "Adafruit_MLX90614.h"
 
 class InfraredTemperature {
   private:
