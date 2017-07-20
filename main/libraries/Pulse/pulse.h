@@ -5,7 +5,11 @@
 
 typedef class PulseSensor{
 public:
-	bool heartbeatDetected(int delay);
+	int oldHeartRate;
+
+	PulseSensor();
+	int getHeartRate();
+	int updateHeartRate();
 }PulseSensor;
 
 #endif

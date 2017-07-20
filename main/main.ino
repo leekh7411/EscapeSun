@@ -21,8 +21,10 @@ void setup() {
 }
  
 
-//심박 수 측정을 위한 delay, loop()에서 전체적인 delay의 틀
+// 심박 수 측정을 위한 delay, loop()에서 전체적인 delay의 틀
 const int delayMsec = 60;
+// 심박 수를 마지막으로 측정한 시간
+long previousMillis = 0;
 
 // 온도 체크 딜레이
 int tempDelay = 0;
@@ -32,16 +34,16 @@ void loop()
   static int beatMsec = 0;
   int heartRateBPM = 0;
   
-  if (pulse.heartbeatDetected(delayMsec)) {
-    heartRateBPM = 60000 / beatMsec;
- 
-    // Print msec/beat and instantaneous heart rate in BPM
-    Serial.print(beatMsec);
-    Serial.print(", ");
-    Serial.println(heartRateBPM);
-    
-    beatMsec = 0;
+  long currentMillis = millis();
+  // if 200ms have passed, check the heart rate measurement:
+  if (currentMillis - previousMillis >= 200) {
+    previousMillis = currentMillis;
+    heartRateBPM = pulse.updateHeartRate(); // 심박 수가 측정 되지 않으면 -1 리턴
   }
+  if(heartRateBPM == -1){
+    heartRateBPM = pulse.getHeartRate();
+  }
+  
   // Note: I assume the sleep delay is way longer than the
   // number of cycles used to run the code hence the error
   // is negligible for math.
@@ -62,5 +64,4 @@ void loop()
   delay(delayMsec);
   tempHumidDelay += delayMsec;
   tempDelay += delayMsec;
-  beatMsec += delayMsec;
 }
