@@ -1,0 +1,7 @@
+SDA -> A4
+
+SCL -> A5
+
+VCC -> 3.3V
+
+GND -> GND

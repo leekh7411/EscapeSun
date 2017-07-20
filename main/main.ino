@@ -1,4 +1,5 @@
-#include <pulse.h>
+//#include <pulse.h>
+#include "libraries/Pulse/pulse.h"
 
 PulseSensor pulse;
 int ledPin = 13;
