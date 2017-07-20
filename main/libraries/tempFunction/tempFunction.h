@@ -17,6 +17,8 @@ public:
 
 public:
 	void temp_est();
+	float getTemp();
+	float getHumi();
 };
 
 #endif
