@@ -1,6 +1,6 @@
 #include "DHT11.h" 
 #include "tempFunction.h"
-void temp_func::getHumi()
+float temp_func::getHumi()
 {
   DHT11 dht11(2); 
   int err;    // result code

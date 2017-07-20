@@ -56,8 +56,8 @@ void loop()
     tempDelay = 0;
   }
   if(tempHumidDelay > 1000){
-    m_temp.temp_est();
-   
+    Serial.print("*temp!!!! = " );
+    Serial.print(m_temp.getTemp() );
     tempHumidDelay = 0;
   } 
   delay(delayMsec);
