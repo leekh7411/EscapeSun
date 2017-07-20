@@ -1,4 +1,3 @@
-//#include <pulse.h>
 #include "pulse.h"
 #include "InfraredTemperature.h"
 #include "Bboobboo.h"
@@ -31,7 +30,7 @@ int tempDelay = 0;
 int tempHumidDelay = 0;
 void loop()
 {
-  static int beatMsec = 0;
+  Serial.println("a");
   int heartRateBPM = 0;
   
   long currentMillis = millis();
@@ -56,7 +55,7 @@ void loop()
     
     tempDelay = 0;
   }
-    if(tempHumidDelay > 1000){
+  if(tempHumidDelay > 1000){
     m_temp.temp_est();
    
     tempHumidDelay = 0;
