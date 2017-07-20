@@ -2,4 +2,5 @@
 
 ## LIBRARY
 - Add your library in libraries folder
-- Write library in Main.ino (relative path)
+- change sketchbook location to ~/EscapeSun/main
+- Write library in Main.ino
