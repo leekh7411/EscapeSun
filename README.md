@@ -1,4 +1,5 @@
 # EscapeSun
 
-## library
-* Move library to C:\Users\user\Document\Arduino\
+## LIBRARY
+- Add your library in libraries folder
+- Write library in Main.ino (relative path)
