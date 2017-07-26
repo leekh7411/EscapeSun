@@ -2,8 +2,10 @@
 #include "InfraredTemperature.h"
 #include "Bboobboo.h"
 #include "checkHeat.h"
+#include "movement.h"
 
 PulseSensor pulse;
+Movement movement;
 InfraredTemperature infraredTemp;
 Bboobboo buzzer;
 checkHeat checkheat;
@@ -14,6 +16,7 @@ void setup() {
   pinMode(13, OUTPUT);
   Serial.begin(9600);
 
+  movement.init();
   infraredTemp = InfraredTemperature();
   buzzer = Bboobboo();
 }
@@ -28,10 +31,7 @@ long previousMillis = 0;
 int tempDelay = 0;
 int tempHumidDelay = 0;
 void loop()
-{
-  Serial.println("a");
-  int heartRateBPM = 0;
-  
+{  
   long currentMillis = millis();
   // if 200ms have passed, check the heart rate measurement:
   if (currentMillis - previousMillis >= 200) {
@@ -43,13 +43,20 @@ void loop()
   // number of cycles used to run the code hence the error
   // is negligible for math.
 
+  if(tempDelay > 2000){
+
+    buzzer.turnOn();
+    buzzer.turnOff();
+
+    if(isZeroMotion == true)  // 모션이 없을 때
+      Serial.println("------zero motion detected!-------");
+    if(isZeroMotion == false) // 모션이 감지됨...
+      Serial.println("======motion detected======");
+    
+    tempDelay = 0;
+  }
   if(tempHumidDelay > 1000){
     checkheat.Allcheck();
-    if(checkheat.SendCall()==1){
-       // 여기서부터 시간을 잰다.
-       buzzer = Bboobboo();
-         buzzer.turnOn();
-    }
     tempHumidDelay = 0;
   } 
   delay(delayMsec);
