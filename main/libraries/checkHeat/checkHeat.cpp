@@ -11,12 +11,14 @@ checkHeat::checkHeat()
 }
 
 
-void checkHeat::SendCall()
+int checkHeat::SendCall()
 {
 	if( (Tempdegree+ BodyTempdegree+ Heartdegree) >=5){
-		//블루투스 사용해서 폰으로 전화를 한다.
+		// 부저를 울린다.
+		  return 1;
 	}
 	else{
+		  return 0 ;
 		// 계속 검사를 한다.
 	}
 }
@@ -76,4 +78,5 @@ void checkHeat::Allcheck(){
 	checkBodyTemp();
 	checkTemp();
 	checkHeart();
+	//SendCall();
 }

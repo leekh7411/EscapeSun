@@ -22,7 +22,7 @@ private:
     PulseSensor pulse;
 public:
     checkHeat();
-    void SendCall();
+    int SendCall();
     void checkBodyTemp();
     void checkTemp();
     void checkHeart();

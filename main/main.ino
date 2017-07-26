@@ -43,15 +43,13 @@ void loop()
   // number of cycles used to run the code hence the error
   // is negligible for math.
 
-  if(tempDelay > 2000){
-
-    buzzer.turnOn();
-    buzzer.turnOff();
-    
-    tempDelay = 0;
-  }
   if(tempHumidDelay > 1000){
     checkheat.Allcheck();
+    if(checkheat.SendCall()==1){
+       // 여기서부터 시간을 잰다.
+       buzzer = Bboobboo();
+         buzzer.turnOn();
+    }
     tempHumidDelay = 0;
   } 
   delay(delayMsec);
