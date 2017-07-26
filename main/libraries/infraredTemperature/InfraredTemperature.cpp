@@ -8,14 +8,16 @@ InfraredTemperature::InfraredTemperature()
     mlx.begin();
 }
 
-void InfraredTemperature::getAmbientTempC()
+float InfraredTemperature::getAmbientTempC()
 {
    ambientTempC = mlx.readAmbientTempC();
+   return ambientTempC;
 }
 
-void InfraredTemperature::getObjectTempC()
+float InfraredTemperature::getObjectTempC()
 {
    objectTempC = mlx.readObjectTempC();
+   return objectTempC;
 }
 
 void InfraredTemperature::printTempC()
