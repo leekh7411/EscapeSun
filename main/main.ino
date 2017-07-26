@@ -1,13 +1,12 @@
 #include "pulse.h"
 #include "InfraredTemperature.h"
 #include "Bboobboo.h"
-#include "tempFunction.h"
+#include "checkHeat.h"
 
 PulseSensor pulse;
 InfraredTemperature infraredTemp;
 Bboobboo buzzer;
-
-temp_func m_temp;
+checkHeat checkheat;
 int ledPin = 13;
 
 void setup() {
@@ -37,30 +36,22 @@ void loop()
   // if 200ms have passed, check the heart rate measurement:
   if (currentMillis - previousMillis >= 200) {
     previousMillis = currentMillis;
-    heartRateBPM = pulse.updateHeartRate(); // 심박 수가 측정 되지 않으면 -1 리턴
   }
-  if(heartRateBPM == -1){
-    heartRateBPM = pulse.getHeartRate();
-  }
+
   
   // Note: I assume the sleep delay is way longer than the
   // number of cycles used to run the code hence the error
   // is negligible for math.
 
   if(tempDelay > 2000){
-    infraredTemp.checkTemp();
-    
+
     buzzer.turnOn();
     buzzer.turnOff();
     
     tempDelay = 0;
   }
   if(tempHumidDelay > 1000){
-    m_temp.temp_est(); 
-    Serial.print("temp= " );
-    Serial.println(m_temp.getTemp() );
-        Serial.print("humi= " );
-    Serial.println(m_temp.getHumi() );
+    checkheat.checkTemp();
     tempHumidDelay = 0;
   } 
   delay(delayMsec);
