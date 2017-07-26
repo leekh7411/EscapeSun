@@ -2,6 +2,9 @@
 
 checkHeat::checkHeat()
 {
+	   long currentMillis = millis();
+	   long previousMillis = currentMillis-3000;
+	   boo = 0;
      	   bodyTemp= 0;
    	   Temp = 0;
    	   Heart = 0;
@@ -14,8 +17,10 @@ checkHeat::checkHeat()
 int checkHeat::SendCall()
 {
 	if( (Tempdegree+ BodyTempdegree+ Heartdegree) >=5){
-		// 부저를 울린다.
-		  return 1;
+ 		buzzer = Bboobboo();
+		boo = 1;
+		buzzer.turnOn();
+		  
 	}
 	else{
 		  return 0 ;
@@ -75,8 +80,17 @@ void checkHeat::checkHeart()
 }
 
 void checkHeat::Allcheck(){
+	long currentMillis = millis();	
 	checkBodyTemp();
 	checkTemp();
 	checkHeart();
-	//SendCall();
+	if(boo == 0 && (currentMillis-previousMillis)>=3000){ // 그리고 시간값까지
+		SendCall();
+	}
+}
+
+void checkHeat::deBoo(){
+	previousMillis = millis();
+	boo = 0;
+	buzzer.turnOff();
 }

@@ -11,6 +11,9 @@ class checkHeat
 {
 
 private:
+    int currentMillis;
+    int previousMillis;
+    int boo;
     int BodyTempdegree;
     int Tempdegree;
     int Heartdegree;
@@ -27,6 +30,7 @@ public:
     void checkTemp();
     void checkHeart();
     void Allcheck();
+    void deBoo();
 
 
 };
