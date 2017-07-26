@@ -45,8 +45,6 @@ void loop()
 
   if(tempDelay > 2000){
 
-    buzzer.turnOn();
-    buzzer.turnOff();
 
     if(isZeroMotion == true)  // 모션이 없을 때
       Serial.println("------zero motion detected!-------");
@@ -56,7 +54,12 @@ void loop()
     tempDelay = 0;
   }
   if(tempHumidDelay > 1000){
-    checkheat.Allcheck();
+   checkheat.Allcheck();
+    if(checkheat.SendCall() == 1){
+      //    buzzer.turnOn();
+          //여기서부터 시간을 잰다.
+          
+    }
     tempHumidDelay = 0;
   } 
   delay(delayMsec);
