@@ -51,9 +51,7 @@ void loop()
     tempDelay = 0;
   }
   if(tempHumidDelay > 1000){
-    checkheat.checkTemp();
-    checkheat.checkBodyTemp();
-    checkheat.checkHeart();    
+    checkheat.Allcheck();
     tempHumidDelay = 0;
   } 
   delay(delayMsec);
