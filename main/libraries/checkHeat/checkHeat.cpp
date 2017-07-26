@@ -2,8 +2,8 @@
 
 checkHeat::checkHeat()
 {
-	   long currentMillis = millis();
-	   long previousMillis = currentMillis-3000;
+	   currentMillis = millis();
+	   previousMillis = currentMillis-30000;
 	   boo = 0;
      	   bodyTemp= 0;
    	   Temp = 0;
@@ -11,13 +11,13 @@ checkHeat::checkHeat()
 	   BodyTempdegree = 0;
            Tempdegree = 0;
            Heartdegree = 0;
+	   buzzer = Bboobboo();
 }
 
 
 int checkHeat::SendCall()
 {
 	if( (Tempdegree+ BodyTempdegree+ Heartdegree) >=5){
- 		buzzer = Bboobboo();
 		boo = 1;
 		buzzer.turnOn();
 		  
@@ -80,16 +80,21 @@ void checkHeat::checkHeart()
 }
 
 void checkHeat::Allcheck(){
-	long currentMillis = millis();	
+	currentMillis = millis();	
 	checkBodyTemp();
 	checkTemp();
 	checkHeart();
-	if(boo == 0 && (currentMillis-previousMillis)>=3000){ // 그리고 시간값까지
+        Serial.print("time!!= " );
+	Serial.println(currentMillis);
+        Serial.print("pretime!!= " );
+	Serial.println(previousMillis);
+	if(boo == 0 && (currentMillis-previousMillis)>=30000){ // 그리고 시간값까지
 		SendCall();
 	}
 }
 
 void checkHeat::deBoo(){
+
 	previousMillis = millis();
 	boo = 0;
 	buzzer.turnOff();

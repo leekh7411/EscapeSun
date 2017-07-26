@@ -11,8 +11,8 @@ class checkHeat
 {
 
 private:
-    int currentMillis;
-    int previousMillis;
+    long currentMillis;
+    long previousMillis;
     int boo;
     int BodyTempdegree;
     int Tempdegree;
@@ -20,6 +20,7 @@ private:
     int bodyTemp;
     int Temp;
     int Heart;
+     Bboobboo buzzer;
     InfraredTemperature infraredTemp;
     temp_func m_temp;
     PulseSensor pulse;
