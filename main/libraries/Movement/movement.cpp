@@ -42,11 +42,9 @@ void Movement::getAcc(){
 
 static void eventCallback(void){
 	if(CurieIMU.getInterruptStatus(CURIE_IMU_ZERO_MOTION)){
-	  	Serial.println("zero motion detected...");
 		isZeroMotion = true;
 	}
 	if(CurieIMU.getInterruptStatus(CURIE_IMU_MOTION)){
-		Serial.println("motion detected!");
 		isZeroMotion = false;
 	}
 }

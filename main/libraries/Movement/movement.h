@@ -14,6 +14,7 @@ public:
 	void getAcc();
 };
 
+// motion이 없을 때 true
 extern bool isZeroMotion;
 
 #endif
