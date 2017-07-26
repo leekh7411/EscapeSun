@@ -12,8 +12,8 @@ class InfraredTemperature {
 
   public:
     InfraredTemperature();
-    void getAmbientTempC();
-    void getObjectTempC();
+    float getAmbientTempC();
+    float getObjectTempC();
     void printTempC();
     void checkTemp();
 };
