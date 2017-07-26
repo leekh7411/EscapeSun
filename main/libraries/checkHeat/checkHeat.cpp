@@ -2,6 +2,7 @@
 #include "Bboobboo.h"
 #include "tempFunction.h"
 #include "InfraredTemperature.h"
+#include "pulse.h"
 checkHeat::checkHeat()
 {
      	   bodyTemp= 0;

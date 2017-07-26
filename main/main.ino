@@ -52,6 +52,8 @@ void loop()
   }
   if(tempHumidDelay > 1000){
     checkheat.checkTemp();
+    checkheat.checkBodyTemp();
+    checkheat.checkHeart();    
     tempHumidDelay = 0;
   } 
   delay(delayMsec);
