@@ -20,7 +20,7 @@ private:
     int bodyTemp;
     int Temp;
     int Heart;
-     Bboobboo buzzer;
+    Bboobboo buzzer;
     InfraredTemperature infraredTemp;
     temp_func m_temp;
     PulseSensor pulse;
