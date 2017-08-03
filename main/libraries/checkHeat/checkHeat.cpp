@@ -58,7 +58,7 @@ int checkHeat::sendCall(int zeroMotion)
 }
 
 
-void checkHeat::checkBodyTemp(int bodyTemperature)
+void checkHeat::checkBodyTemp(float bodyTemperature)
 {
 	Serial.print("bodytemp= " );
 	Serial.println(bodyTemperature);
@@ -120,7 +120,27 @@ void checkHeat::checkMedian(){
 			|| temp < TEMP_MIN || temp > TEMP_MAX 
 			|| heart < HEART_MIN || heart > HEART_MAX ){
 			i--;
-			Serial.println("hi");
+			Serial.print(bodyTemp);
+			Serial.print(" ");
+			Serial.print(BODY_TEMP_MAX);
+			Serial.print(" ");
+			Serial.println(BODY_TEMP_MIN);
+			
+			Serial.print(temp);
+			Serial.print(" ");
+			Serial.print(TEMP_MAX);
+			Serial.print(" ");
+			Serial.println(TEMP_MIN);
+			
+			Serial.print(heart);
+			Serial.print(" ");
+			Serial.print(HEART_MAX);
+			Serial.print(" ");
+			Serial.println(HEART_MIN);
+			Serial.println();
+			
+			delay(100);
+			
 			continue;
 		}
 		median[HEART].add(heart);

@@ -19,7 +19,7 @@ private:
     int bodyTempDegree;
     int tempDegree;
     int heartDegree;
-    int bodyTemp;
+    float bodyTemp;
     int temp;
     int heart;
 	int count;
@@ -32,9 +32,9 @@ private:
 public:
     checkHeat();
     int sendCall(int zeroMotion);
-    void checkBodyTemp(int );
-    void checkTemp(int );
-    void checkHeart(int );
+    void checkBodyTemp(float);
+    void checkTemp(int);
+    void checkHeart(int);
     void allcheck();
     void deBoo();
 	void checkMedian();

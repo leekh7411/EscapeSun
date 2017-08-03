@@ -57,7 +57,7 @@ void loop()
     if(checkheat.sendCall(isZeroMotion) == 1){
 
       //여기서부터 시간을 잰다. 30 초 이상 지났을 때 블루투스로 전화를 건다.
-          
+      // 버튼을 누르고 나서 다시 여기로 들어올 때
     }
 
     // 버튼을 누르면 checkHeat::deBoo()를 사용한다.
