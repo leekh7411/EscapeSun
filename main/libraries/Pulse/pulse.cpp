@@ -16,8 +16,8 @@ int PulseSensor::updateHeartRate(){
   int heartRateMeasurement = analogRead(0);
   int heartRate = map(heartRateMeasurement, 0, 1023, 0, 100);
   if (heartRate != oldHeartRate) {      // if the heart rate has changed
-    Serial.print("Heart Rate is now: "); // print it
-    Serial.println(heartRate);
+    // Serial.print("Heart Rate is now: "); // print it
+    // Serial.println(heartRate);
     oldHeartRate = heartRate;           // save the level for next comparison
     return heartRate;
   }

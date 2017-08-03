@@ -53,8 +53,8 @@ void loop()
     tempDelay = 0;
   }
   if(tempHumidDelay > 1000){
-   checkheat.Allcheck();
-    if(checkheat.SendCall(isZeroMotion) == 1){
+   checkheat.allcheck();
+    if(checkheat.sendCall(isZeroMotion) == 1){
 
       //여기서부터 시간을 잰다. 30 초 이상 지났을 때 블루투스로 전화를 건다.
           

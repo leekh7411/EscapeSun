@@ -6,35 +6,38 @@
 #include "tempFunction.h"
 #include "InfraredTemperature.h"
 #include "pulse.h"
+#include "RunningMedian.h"
+
+#define MEDIAN_SIZE		3
 
 class checkHeat
 {
-
 private:
     long currentMillis;
     long previousMillis;
     int boo;
-    int BodyTempdegree;
-    int Tempdegree;
-    int Heartdegree;
+    int bodyTempDegree;
+    int tempDegree;
+    int heartDegree;
     int bodyTemp;
-    int Temp;
-    int Heart;
+    int temp;
+    int heart;
 	int count;
     Bboobboo buzzer;
     InfraredTemperature infraredTemp;
-    temp_func m_temp;
+    temp_func mTemp;
     PulseSensor pulse;
+	RunningMedian median[MEDIAN_SIZE] = {RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE)};
+	
 public:
     checkHeat();
-    int SendCall(int zeroMotion);
-    void checkBodyTemp();
-    void checkTemp();
-    void checkHeart();
-    void Allcheck();
+    int sendCall(int zeroMotion);
+    void checkBodyTemp(int );
+    void checkTemp(int );
+    void checkHeart(int );
+    void allcheck();
     void deBoo();
-
-
+	void checkMedian();
 };
 
 
