@@ -1,5 +1,5 @@
 
-#include "bboobboo.h"
+#include "Bboobboo.h"
 
 Bboobboo::Bboobboo()
 {

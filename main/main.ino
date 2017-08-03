@@ -3,19 +3,20 @@
 #include "Bboobboo.h"
 #include "checkHeat.h"
 #include "movement.h"
-
+#include "BleManager.h"
 PulseSensor pulse;
 Movement movement;
 InfraredTemperature infraredTemp;
 Bboobboo buzzer;
 checkHeat checkheat;
+BleManager blemanager;
 int ledPin = 13;
 
 void setup() {
   // put your setup code here, to run once:
   pinMode(13, OUTPUT);
   Serial.begin(9600);
-
+  blemanager = BleManager();
   movement.init();
   infraredTemp = InfraredTemperature();
   buzzer = Bboobboo();
@@ -32,6 +33,7 @@ int tempDelay = 0;
 int tempHumidDelay = 0;
 void loop()
 {  
+  blemanager.initInLoop();
   long currentMillis = millis();
   // if 200ms have passed, check the heart rate measurement:
   if (currentMillis - previousMillis >= 200) {

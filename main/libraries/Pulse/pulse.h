@@ -6,7 +6,6 @@
 typedef class PulseSensor{
 public:
 	int oldHeartRate;
-
 	PulseSensor();
 	int getHeartRate();
 	int updateHeartRate();
