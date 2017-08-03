@@ -11,21 +11,26 @@ checkHeat::checkHeat()
 	BodyTempdegree = 0;
 	Tempdegree = 0;
 	Heartdegree = 0;
+	count = 0;
 	buzzer = Bboobboo();
 }
 
 
-int checkHeat::SendCall()
+int checkHeat::SendCall(int zeroMotion)
 {
-	if( (Tempdegree+ BodyTempdegree+ Heartdegree) >=5){
+	count += Tempdegree + BodyTempdegree + Heartdegree;
+	if(zeroMotion)
+		count++;
+	
+	if(count >= 5){
 		boo = 1;
 		buzzer.turnOn();
-		  
 	}
 	else{
 		  return 0 ;
 		// 계속 검사를 한다.
 	}
+	return 1;
 }
 
 
@@ -35,13 +40,13 @@ void checkHeat::checkBodyTemp()
 	bodyTemp = infraredTemp.getObjectTempC();
         Serial.print("bodytemp= " );
 	Serial.println(bodyTemp);
-	if(bodyTemp <38){
+	if(bodyTemp < 38){
 		BodyTempdegree = 0;
 	}
-	else if(Temp <39){
+	else if(Temp < 39){
 		BodyTempdegree = 1;
 	}
-	else if(Temp <40){
+	else if(Temp < 40){
 		BodyTempdegree = 3;
 	}
 	else{
@@ -55,13 +60,13 @@ void checkHeat::checkTemp()
 	Temp = m_temp.getTemp();
     Serial.print("temp= " );
 	Serial.println(Temp);
-	if(Temp >= 30 && Temp <34 ){
+	if(Temp >= 30 && Temp < 34 ){
 		Tempdegree = 1;
 	}
-	else if(Temp>=34 && Temp <39){
+	else if(Temp >= 34 && Temp < 39){
 		Tempdegree = 2;
 	}
-	else if(Temp >=39){
+	else if(Temp >= 39){
 		Tempdegree = 3;
 	}
 	else{
@@ -98,12 +103,11 @@ void checkHeat::Allcheck(){
 	Serial.println(previousMillis);
 	
 	if(boo == 0 && (currentMillis - previousMillis) >= 30000){ // 그리고 시간값까지
-		SendCall();
+		// SendCall();
 	}
 }
 
 void checkHeat::deBoo(){
-
 	previousMillis = millis();
 	boo = 0;
 	buzzer.turnOff();

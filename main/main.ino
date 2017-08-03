@@ -44,8 +44,7 @@ void loop()
   // is negligible for math.
 
   if(tempDelay > 2000){
-
-
+    
     if(isZeroMotion == true)  // 모션이 없을 때
       Serial.println("------zero motion detected!-------");
     if(isZeroMotion == false) // 모션이 감지됨...
@@ -55,7 +54,7 @@ void loop()
   }
   if(tempHumidDelay > 1000){
    checkheat.Allcheck();
-    if(checkheat.SendCall() == 1){
+    if(checkheat.SendCall(isZeroMotion) == 1){
 
       //여기서부터 시간을 잰다. 30 초 이상 지났을 때 블루투스로 전화를 건다.
           

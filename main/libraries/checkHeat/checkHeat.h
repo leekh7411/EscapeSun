@@ -20,13 +20,14 @@ private:
     int bodyTemp;
     int Temp;
     int Heart;
+	int count;
     Bboobboo buzzer;
     InfraredTemperature infraredTemp;
     temp_func m_temp;
     PulseSensor pulse;
 public:
     checkHeat();
-    int SendCall();
+    int SendCall(int zeroMotion);
     void checkBodyTemp();
     void checkTemp();
     void checkHeart();
