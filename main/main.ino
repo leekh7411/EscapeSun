@@ -4,6 +4,16 @@
 #include "checkHeat.h"
 #include "movement.h"
 #include "BleManager.h"
+#include <CurieBLE.h>
+
+/*Bluetooth Low Energy*/
+// Main Service UUID
+BLEService escSunService("19B10000-E8F2-537E-4F6C-D104768A1214"); 
+BLECharCharacteristic switch0("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
+
+BLECharacteristic sensorData("19B10006-E8F2-537E-4F6C-D104768A1214",BLERead | BLENotify, 4);
+BLEDevice central;
+
 PulseSensor pulse;
 Movement movement;
 InfraredTemperature infraredTemp;
@@ -16,7 +26,9 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(13, OUTPUT);
   Serial.begin(9600);
-  blemanager = BleManager();
+  blemanager = BleManager(escSunService,switch0,sensorData);
+  //blemanager = BleManager();
+  //BleManagerSetup();
   movement.init();
   infraredTemp = InfraredTemperature();
   buzzer = Bboobboo();
@@ -24,7 +36,7 @@ void setup() {
  
 
 // 심박 수 측정을 위한 delay, loop()에서 전체적인 delay의 틀
-const int delayMsec = 60;
+const int delayMsec = 100;
 // 심박 수를 마지막으로 측정한 시간
 long previousMillis = 0;
 
@@ -33,8 +45,9 @@ int tempDelay = 0;
 int tempHumidDelay = 0;
 void loop()
 {  
-  blemanager.initInLoop();
-  long currentMillis = millis();
+  blemanager.initInLoop(central,sensorData);
+  
+  /*long currentMillis = millis();
   // if 200ms have passed, check the heart rate measurement:
   if (currentMillis - previousMillis >= 200) {
     previousMillis = currentMillis;
@@ -67,5 +80,25 @@ void loop()
   } 
   delay(delayMsec);
   tempHumidDelay += delayMsec;
-  tempDelay += delayMsec;
+  tempDelay += delayMsec;*/
+  
 }
+
+/*void BleManagerSetup(){
+  // Main Service UUID
+  //escSunService = new BLEService("19B10000-E8F2-537E-4F6C-D104768A1214");
+  // Char characteristic  
+  //switchCharacteristic = new BLECharCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
+  // Integer characteristic
+  //sensorCharacteristic = new BLEIntCharacteristic("19B10002-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify);
+  BLE.begin(); // BLE object init in 'CurieBLE.h' library
+  BLE.setLocalName("SUN"); // Ble's Tag name
+  BLE.setAdvertisedService(escSunService); // set the Service
+  escSunService.addCharacteristic(sensorCharacteristic); // add Characteristic in the Service
+  escSunService.addCharacteristic(switchCharacteristic); // add Characteristic in the Service
+  BLE.addService(escSunService);
+  switchCharacteristic.setValue(0);
+  sensorCharacteristic.setValue(100); // first initialize (now random value)
+  BLE.advertise();
+  Serial.println("Escape Sun Ble Manager Peripheral setup finish!");
+}*/

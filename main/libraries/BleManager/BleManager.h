@@ -6,16 +6,19 @@
 
 class BleManager{
 private:
-// Main Service UUID
-BLEService* escSunService;
-// Char characteristic  
-BLECharCharacteristic* switchCharacteristic;
-// Integer characteristic
-BLEIntCharacteristic* sensorCharacteristic;
-BLEDevice central;
+	int MAX,cnt;
+	int sensor_val[4]; // Datas have to set range in 0 ~ 256 
 public:
-	BleManager(); // This have to initialize in Setup()!
-	void initInLoop(); 
+	BleManager();
+	BleManager(
+	  BLEService escSunService,
+	   BLECharCharacteristic switch0,
+    	  BLECharacteristic sensorData
+	); // This have to initialize in Setup()!
+	void initInLoop(
+	    BLEDevice _central,
+    	    BLECharacteristic sensorData
+  	); 
 	void setIntSensorValue(int value); // set the value in the integer characteristic
 
 };
