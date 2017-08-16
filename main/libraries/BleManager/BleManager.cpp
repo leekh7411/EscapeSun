@@ -8,6 +8,10 @@ BleManager::BleManager(
     BLECharacteristic sensorData
   ){
   MAX = 10; cnt = 0; 
+  TEMPERATURE = 0;
+  BODYHEAT = 1;
+  HEARTRATE = 2;
+  HUMIDITY = 3;
   for(int i = 0 ; i < 3 ; i++)sensor_val[i] = (i+1) * 50;
   BLE.begin(); // BLE object init in 'CurieBLE.h' library
   BLE.setLocalName("SUN"); // Ble's Tag name
@@ -29,8 +33,15 @@ BleManager::BleManager(
   Serial.println("Escape Sun Ble Manager Peripheral setup finish!");
 }
 
-void BleManager::setIntSensorValue(int value){
-
+void BleManager::setIntSensorValue(int index, int value){
+  // INDEX
+  // 0 : Temp
+  // 1 : Body temp
+  // 2 : Heart
+  // 3 : Humidity
+  if(index >= 0 && index <= 3){
+    sensor_val[index] = value;
+  }
 }
 
 void BleManager::initInLoop(

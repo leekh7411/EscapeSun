@@ -8,7 +8,9 @@ class BleManager{
 private:
 	int MAX,cnt;
 	int sensor_val[4]; // Datas have to set range in 0 ~ 256 
+
 public:
+	int TEMPERATURE,BODYHEAT,HEARTRATE,HUMIDITY;
 	BleManager();
 	BleManager(
 	  BLEService escSunService,
@@ -19,9 +21,6 @@ public:
 	    BLEDevice _central,
     	    BLECharacteristic sensorData
   	); 
-	void setIntSensorValue(int value); // set the value in the integer characteristic
-
+	void setIntSensorValue(int index, int value); // set the value in the integer characteristic
 };
- 
-
 #endif
