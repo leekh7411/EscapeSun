@@ -1,8 +1,8 @@
 #include "checkHeat.h"
 
-#define HEART 			0
-#define TEMP 			1
-#define BODY			2
+#define TEMP 			0
+#define BODY 			1
+#define HEART			2
 
 #define BODY_TEMP_MAX	50
 #define BODY_TEMP_MIN	30
@@ -26,6 +26,10 @@ checkHeat::checkHeat()
 	heartDegree = 0;
 	count = 0;
 	buzzer = Bboobboo();
+}
+
+void checkHeat::init(BleManager *Manager){
+  manager = Manager;
 }
 
 void checkHeat::deBoo(){
@@ -155,6 +159,10 @@ void checkHeat::checkMedian(){
 	}
 	Serial.println();
 	delay(500);
+	manager->setIntSensorValue(manager->TEMPERATURE, int(median[manager->TEMPERATURE].getAverage(median[manager->TEMPERATURE].getMedian())));
+	manager->setIntSensorValue(manager->BODYHEAT, int(median[manager->BODYHEAT].getAverage(median[manager->BODYHEAT].getMedian())));
+	manager->setIntSensorValue(manager->HEARTRATE, int(median[manager->HEARTRATE].getAverage(median[manager->HEARTRATE].getMedian())));
+
 	checkBodyTemp(median[BODY].getAverage(median[BODY].getMedian()));
 	checkTemp(median[TEMP].getAverage(median[TEMP].getMedian()));
 	checkHeart(median[HEART].getAverage(median[HEART].getMedian()));

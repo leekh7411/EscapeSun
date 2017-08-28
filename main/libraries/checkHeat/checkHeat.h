@@ -7,12 +7,14 @@
 #include "InfraredTemperature.h"
 #include "pulse.h"
 #include "RunningMedian.h"
+#include "BleManager.h"
 
 #define MEDIAN_SIZE		3
 
 class checkHeat
 {
 private:
+    BleManager *manager;
     long currentMillis;
     long previousMillis;
     int boo;
@@ -30,6 +32,7 @@ private:
 	RunningMedian median[MEDIAN_SIZE] = {RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE)};
 	
 public:
+    void init(BleManager *Manager);
     checkHeat();
     int sendCall(int zeroMotion);
     void checkBodyTemp(float);
