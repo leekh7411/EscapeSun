@@ -60,6 +60,7 @@ void BleManager::initInLoop(
       (const unsigned char)(sensor_val[3])
     };
     sensorData.setValue(values,4);
+    Serial.println("---------------> Sensor Data Updated!"); 
   }
   
 }

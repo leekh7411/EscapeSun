@@ -26,8 +26,9 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(13, OUTPUT);
   Serial.begin(9600);
+  
   blemanager = BleManager(escSunService,switch0,sensorData);
-
+  
   checkheat.init(&blemanager);
   movement.init();
   infraredTemp = InfraredTemperature();
@@ -46,19 +47,19 @@ int tempHumidDelay = 0;
 void loop()
 {  
   blemanager.initInLoop(central,sensorData);
-  
-  /*long currentMillis = millis();
+  //Serial.println("in loop");
+  long currentMillis = millis();
   // if 200ms have passed, check the heart rate measurement:
   if (currentMillis - previousMillis >= 200) {
     previousMillis = currentMillis;
-  }*/
+  }
 
   
   // Note: I assume the sleep delay is way longer than the
   // number of cycles used to run the code hence the error
   // is negligible for math.
 
-  /*if(tempDelay > 2000){
+  if(tempDelay > 2000){
     
     if(isZeroMotion == true)  // 모션이 없을 때
       Serial.println("------zero motion detected!-------");
@@ -66,9 +67,9 @@ void loop()
       Serial.println("======motion detected======");
     
     tempDelay = 0;
-  }*/
+  }
 
-  /*
+  
   if(tempHumidDelay > 1000){
    checkheat.allcheck();
     if(checkheat.sendCall(isZeroMotion) == 1){
@@ -79,11 +80,11 @@ void loop()
 
     // 버튼을 누르면 checkHeat::deBoo()를 사용한다.
     tempHumidDelay = 0;
-  }*/
+  }
    
   delay(delayMsec);
-  /*tempHumidDelay += delayMsec;
-  tempDelay += delayMsec;*/
+  tempHumidDelay += delayMsec;
+  tempDelay += delayMsec;
   
 }
 

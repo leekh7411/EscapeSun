@@ -162,7 +162,7 @@ void checkHeat::checkMedian(){
 	manager->setIntSensorValue(manager->TEMPERATURE, int(median[manager->TEMPERATURE].getAverage(median[manager->TEMPERATURE].getMedian())));
 	manager->setIntSensorValue(manager->BODYHEAT, int(median[manager->BODYHEAT].getAverage(median[manager->BODYHEAT].getMedian())));
 	manager->setIntSensorValue(manager->HEARTRATE, int(median[manager->HEARTRATE].getAverage(median[manager->HEARTRATE].getMedian())));
-
+	
 	checkBodyTemp(median[BODY].getAverage(median[BODY].getMedian()));
 	checkTemp(median[TEMP].getAverage(median[TEMP].getMedian()));
 	checkHeart(median[HEART].getAverage(median[HEART].getMedian()));
