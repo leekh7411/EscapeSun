@@ -27,8 +27,8 @@ void setup() {
   pinMode(13, OUTPUT);
   Serial.begin(9600);
   blemanager = BleManager(escSunService,switch0,sensorData);
-  //blemanager = BleManager();
-  //BleManagerSetup();
+
+  checkheat.init(&blemanager);
   movement.init();
   infraredTemp = InfraredTemperature();
   buzzer = Bboobboo();
@@ -51,14 +51,14 @@ void loop()
   // if 200ms have passed, check the heart rate measurement:
   if (currentMillis - previousMillis >= 200) {
     previousMillis = currentMillis;
-  }
+  }*/
 
   
   // Note: I assume the sleep delay is way longer than the
   // number of cycles used to run the code hence the error
   // is negligible for math.
 
-  if(tempDelay > 2000){
+  /*if(tempDelay > 2000){
     
     if(isZeroMotion == true)  // 모션이 없을 때
       Serial.println("------zero motion detected!-------");
@@ -66,7 +66,9 @@ void loop()
       Serial.println("======motion detected======");
     
     tempDelay = 0;
-  }
+  }*/
+
+  /*
   if(tempHumidDelay > 1000){
    checkheat.allcheck();
     if(checkheat.sendCall(isZeroMotion) == 1){
@@ -77,28 +79,11 @@ void loop()
 
     // 버튼을 누르면 checkHeat::deBoo()를 사용한다.
     tempHumidDelay = 0;
-  } 
+  }*/
+   
   delay(delayMsec);
-  tempHumidDelay += delayMsec;
+  /*tempHumidDelay += delayMsec;
   tempDelay += delayMsec;*/
   
 }
 
-/*void BleManagerSetup(){
-  // Main Service UUID
-  //escSunService = new BLEService("19B10000-E8F2-537E-4F6C-D104768A1214");
-  // Char characteristic  
-  //switchCharacteristic = new BLECharCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
-  // Integer characteristic
-  //sensorCharacteristic = new BLEIntCharacteristic("19B10002-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify);
-  BLE.begin(); // BLE object init in 'CurieBLE.h' library
-  BLE.setLocalName("SUN"); // Ble's Tag name
-  BLE.setAdvertisedService(escSunService); // set the Service
-  escSunService.addCharacteristic(sensorCharacteristic); // add Characteristic in the Service
-  escSunService.addCharacteristic(switchCharacteristic); // add Characteristic in the Service
-  BLE.addService(escSunService);
-  switchCharacteristic.setValue(0);
-  sensorCharacteristic.setValue(100); // first initialize (now random value)
-  BLE.advertise();
-  Serial.println("Escape Sun Ble Manager Peripheral setup finish!");
-}*/
