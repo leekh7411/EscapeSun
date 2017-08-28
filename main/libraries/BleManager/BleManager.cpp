@@ -12,7 +12,7 @@ BleManager::BleManager(
   BODYHEAT = 1;
   HEARTRATE = 2;
   HUMIDITY = 3;
-  for(int i = 0 ; i < 3 ; i++)sensor_val[i] = (i+1) * 50;
+  for(int i = 0 ; i < 3 ; i++)sensor_val[i] = 255;
   BLE.begin(); // BLE object init in 'CurieBLE.h' library
   BLE.setLocalName("SUN"); // Ble's Tag name
   BLE.setAdvertisedService(escSunService); // set the Service
@@ -30,6 +30,7 @@ BleManager::BleManager(
   };
   sensorData.setValue(values,4);
   BLE.advertise();
+  IsDataChanged = false;
   Serial.println("Escape Sun Ble Manager Peripheral setup finish!");
 }
 
@@ -41,6 +42,7 @@ void BleManager::setIntSensorValue(int index, int value){
   // 3 : Humidity
   if(index >= 0 && index <= 3){
     sensor_val[index] = value;
+    IsDataChanged = true;
   }
 }
 
@@ -48,15 +50,17 @@ void BleManager::initInLoop(
     BLEDevice _central,
     BLECharacteristic sensorData
   ){
-  _central = BLE.central();
-  cnt++;
-  cnt = cnt % MAX;
-  const unsigned char values[] = {
-    (const unsigned char)(sensor_val[0] + cnt),
-    (const unsigned char)(sensor_val[1] + cnt),
-    (const unsigned char)(sensor_val[2] + cnt),
-    (const unsigned char)(sensor_val[3] + cnt)
-  };
-  sensorData.setValue(values,4);
+  if(IsDataChanged){
+    IsDataChanged = false;
+    _central = BLE.central();
+    const unsigned char values[] = {
+      (const unsigned char)(sensor_val[0]),
+      (const unsigned char)(sensor_val[1]),
+      (const unsigned char)(sensor_val[2]),
+      (const unsigned char)(sensor_val[3])
+    };
+    sensorData.setValue(values,4);
+  }
+  
 }
 

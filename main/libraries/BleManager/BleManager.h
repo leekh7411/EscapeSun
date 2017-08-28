@@ -8,7 +8,7 @@ class BleManager{
 private:
 	int MAX,cnt;
 	int sensor_val[4]; // Datas have to set range in 0 ~ 256 
-
+ 	bool IsDataChanged;
 public:
 	int TEMPERATURE,BODYHEAT,HEARTRATE,HUMIDITY;
 	BleManager();
