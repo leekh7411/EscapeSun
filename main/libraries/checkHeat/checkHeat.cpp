@@ -3,13 +3,14 @@
 #define TEMP 			0
 #define BODY 			1
 #define HEART			2
+#define HUMI 	3
 
 #define BODY_TEMP_MAX	50
 #define BODY_TEMP_MIN	30
 
 #define TEMP_MAX		50
-#define TEMP_MIN		10
 
+#define TEMP_MIN		10
 #define HEART_MAX		200
 #define HEART_MIN		40
 
@@ -38,8 +39,9 @@ void checkHeat::deBoo(){
 	buzzer.turnOff();
 }
 
-int checkHeat::sendCall(int zeroMotion)
+void checkHeat::sendCall(int zeroMotion)
 {
+
 	count = tempDegree + bodyTempDegree + heartDegree;
 	
 	if(zeroMotion)
@@ -50,15 +52,28 @@ int checkHeat::sendCall(int zeroMotion)
 	
 	if(count >= 5){
 		boo = 1;
+		long currentMillis = millis();
+		long laterMillis;
 		buzzer.turnOn();
-		delay(1000);
-		deBoo();
+		int buttonState;    
+
+    while(1) {
+    	laterMillis = millis();
+
+    	if(laterMillis-currentMillis > 30000) {
+
+    			Serial.println("time 30 over");
+    	}
+
+      buttonState = digitalRead(13);    
+      if(buttonState == LOW){         
+         deBoo();
+         break;
+      } 
+    }
+
+
 	}
-	else{
-		  return 0 ;
-		// 계속 검사를 한다.
-	}
-	return 1;
 }
 
 
@@ -82,7 +97,7 @@ void checkHeat::checkBodyTemp(float bodyTemperature)
 
 void checkHeat::checkTemp(int temperature)
 {
-    Serial.print("temp= " );
+  Serial.print("temp= " );
 	Serial.println(temperature);
 	if(temperature >= 30 && temperature < 34 ){
 		tempDegree = 1;
@@ -115,7 +130,8 @@ void checkHeat::checkMedian(){
 	mTemp.temp_est(); 
 	for(int i = 0; i < MEDIAN_MAX_SIZE; i++){
 		bodyTemp = infraredTemp.getObjectTempC();
-		temp = mTemp.getTemp();	
+		temp = mTemp.getTemp();
+		humidity = mTemp.getHumi();
 		heart  = pulse.updateHeartRate();	
 		if(heart == -1){					
 			heart = pulse.getHeartRate();
@@ -142,6 +158,10 @@ void checkHeat::checkMedian(){
 			Serial.print(" ");
 			Serial.println(HEART_MIN);
 			Serial.println();
+
+			Serial.print(humidity);
+			Serial.print(" ");
+			Serial.println();
 			
 			delay(100);
 			
@@ -150,18 +170,13 @@ void checkHeat::checkMedian(){
 		median[HEART].add(heart);
 		median[TEMP].add(temp);
 		median[BODY].add(bodyTemp);
+		median[HUMI].add(humidity);
 	}
-	for(int i = 0; i < MEDIAN_MAX_SIZE; i++){
-		Serial.print(median[HEART].getElement(i));
-		Serial.print(" ");
-		if(i % 7 == 0)
-			Serial.println();
-	}
-	Serial.println();
-	delay(500);
+
 	manager->setIntSensorValue(manager->TEMPERATURE, int(median[manager->TEMPERATURE].getAverage(median[manager->TEMPERATURE].getMedian())));
 	manager->setIntSensorValue(manager->BODYHEAT, int(median[manager->BODYHEAT].getAverage(median[manager->BODYHEAT].getMedian())));
 	manager->setIntSensorValue(manager->HEARTRATE, int(median[manager->HEARTRATE].getAverage(median[manager->HEARTRATE].getMedian())));
+	manager->setIntSensorValue(manager->HUMIDITY, int(median[manager->HUMIDITY].getAverage(median[manager->HUMIDITY].getMedian())));
 	
 	checkBodyTemp(median[BODY].getAverage(median[BODY].getMedian()));
 	checkTemp(median[TEMP].getAverage(median[TEMP].getMedian()));

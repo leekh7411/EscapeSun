@@ -9,7 +9,7 @@
 #include "RunningMedian.h"
 #include "BleManager.h"
 
-#define MEDIAN_SIZE		3
+#define MEDIAN_SIZE		4
 
 class checkHeat
 {
@@ -22,6 +22,8 @@ private:
     int tempDegree;
     int heartDegree;
     float bodyTemp;
+
+    float humidity;
     int temp;
     int heart;
 	int count;
@@ -29,12 +31,12 @@ private:
     InfraredTemperature infraredTemp;
     temp_func mTemp;
     PulseSensor pulse;
-	RunningMedian median[MEDIAN_SIZE] = {RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE)};
+	RunningMedian median[MEDIAN_SIZE] = {RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE)};
 	
 public:
     void init(BleManager *Manager);
     checkHeat();
-    int sendCall(int zeroMotion);
+    void sendCall(int zeroMotion);
     void checkBodyTemp(float);
     void checkTemp(int);
     void checkHeart(int);
