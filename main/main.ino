@@ -47,6 +47,8 @@ int tempHumidDelay = 0;
 void loop()
 {  
   blemanager.initInLoop(central,sensorData);
+
+  /*
   //Serial.println("in loop");
   long currentMillis = millis();
   // if 200ms have passed, check the heart rate measurement:
@@ -85,6 +87,6 @@ void loop()
   delay(delayMsec);
   tempHumidDelay += delayMsec;
   tempDelay += delayMsec;
-  
+  */
 }
 
