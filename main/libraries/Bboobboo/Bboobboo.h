@@ -4,7 +4,7 @@
 
 #include "Arduino.h"
 
-#define BUZZER_PIN_NUMER 7
+#define BUZZER_PIN_NUMER 8
 
 
 class Bboobboo
