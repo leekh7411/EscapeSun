@@ -70,7 +70,6 @@ void loop()
     
     tempDelay = 0;
   }
-
  
   if(tempHumidDelay > 1000){
       checkheat.allcheck();

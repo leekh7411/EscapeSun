@@ -39,6 +39,7 @@ void checkHeat::deBoo(){
 	buzzer.turnOff();
 }
 
+
 void checkHeat::sendCall(int zeroMotion)
 {
 
@@ -59,10 +60,17 @@ void checkHeat::sendCall(int zeroMotion)
 
     while(1) {
     	laterMillis = millis();
-
+    	bool flag;
     	if(laterMillis-currentMillis > 30000) {
 
     			Serial.println("time 30 over");
+    			if(!flag){
+    				// send messeage
+    				//manager->setIntSensorValue(, int(119));
+    			}
+    			deBoo();
+    			delay(1500);
+    			buzzer.turnOn();
     	}
 
       buttonState = digitalRead(13);    
@@ -76,7 +84,21 @@ void checkHeat::sendCall(int zeroMotion)
 	}
 }
 
-
+void checkHeat::isLongPress(){
+      buttonState = digitalRead(13);    
+      if(buttonState == LOW){
+      	long currentMillis = millis();
+		long laterMillis = millis();         
+      	while(laterMillis-currentMillis < 5000){
+      		laterMillis = millis();
+      		if(buttonState == HIGH){
+      			return;
+      		}
+      	}
+      	// send message to smartphone hi:
+      	//manager->setIntSensorValue(, int(119));
+      } 
+}
 void checkHeat::checkBodyTemp(float bodyTemperature)
 {
 	Serial.print("bodytemp= " );
