@@ -43,6 +43,7 @@ public:
     void allcheck();
     void deBoo();
 	void checkMedian();
+    void isLongPress();
 };
 
 
