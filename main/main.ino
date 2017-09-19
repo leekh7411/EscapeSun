@@ -10,10 +10,13 @@
 // Main Service UUID
 BLEService escSunService("19B10000-E8F2-537E-4F6C-D104768A1214"); 
 BLECharCharacteristic switch0("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
-
+BLEIntCharacteristic distance("19B10002-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
+BLEIntCharacteristic emergency("19B10003-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
+BLEIntCharacteristic limit_distance("19B10011-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
+BLEIntCharacteristic limit_heart_rate("19B10012-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
+BLEIntCharacteristic limit_humidity("19B10013-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
 BLECharacteristic sensorData("19B10006-E8F2-537E-4F6C-D104768A1214",BLERead | BLENotify, 4);
 BLEDevice central;
-
 PulseSensor pulse;
 Movement movement;
 InfraredTemperature infraredTemp;
@@ -26,9 +29,7 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(buttonPin, INPUT);
   Serial.begin(9600);
-  
-  blemanager = BleManager(escSunService,switch0,sensorData);
-  
+  blemanager = BleManager(escSunService,switch0,sensorData,distance,emergency,limit_distance,limit_heart_rate,limit_humidity);
   checkheat.init(&blemanager);
   movement.init();
   infraredTemp = InfraredTemperature();
@@ -46,8 +47,8 @@ int tempDelay = 0;
 int tempHumidDelay = 0;
 void loop()
 {  
-  blemanager.initInLoop(central,sensorData);
-
+  blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
+  Serial.println(blemanager.getLimitDistance());
   /*
   //Serial.println("in loop");
   long currentMillis = millis();

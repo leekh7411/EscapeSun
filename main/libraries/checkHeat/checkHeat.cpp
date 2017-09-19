@@ -85,7 +85,7 @@ void checkHeat::sendCall(int zeroMotion)
 }
 
 void checkHeat::isLongPress(){
-      buttonState = digitalRead(13);    
+      int buttonState = digitalRead(13);    
       if(buttonState == LOW){
       	long currentMillis = millis();
 		long laterMillis = millis();         
