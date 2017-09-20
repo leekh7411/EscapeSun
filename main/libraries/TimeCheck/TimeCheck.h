@@ -10,7 +10,7 @@ public:
 	long Secondtime();
 	long Minutetime();
 	void resetTime();
-
+	long ModulerSecondtime();
 }TimeCheck;
 
 #endif

@@ -1,5 +1,4 @@
 #include "checkHeat.h"
-
 #define TEMP 			0
 #define BODY 			1
 #define HEART			2
@@ -24,14 +23,17 @@ checkHeat::checkHeat()
 	bodyTempDegree = 0;
 	tempDegree = 0;
 	heartDegree = 0;
+	humidityDegree = 0;
 	count = 0;
 	buzzer = Bboobboo();
-	Temperature_Score_Stack = new stack<int>[TEMPERATURE_STACK_SIZE];
-	Temperature_Score = 0;
+	Temperature_Time.init();
+	BodyHeat_Time.init();
+	HeartRate_Time.init();
+	Humidity_Time.init();
 }
 
 void checkHeat::init(BleManager *Manager){
-  manager = Manager;
+  	manager = Manager;
 }
 
 void checkHeat::deBoo(){
@@ -49,8 +51,6 @@ void checkHeat::sendCall(int zeroMotion)
 	if(zeroMotion)
 		count++;
 		
-	Serial.print("count : ");
-	Serial.println(count);
 	
 	if(count >= 5){
 		boo = 1;
@@ -63,7 +63,6 @@ void checkHeat::sendCall(int zeroMotion)
     	laterMillis = millis();
     	bool flag;
     	if(laterMillis-currentMillis > 30000) {
-
     			Serial.println("time 30 over");
     			if(!flag){
     				// send messeage
@@ -102,49 +101,176 @@ void checkHeat::isLongPress(){
 }
 void checkHeat::checkBodyTemp(float bodyTemperature)
 {
-	Serial.print("bodytemp= " );
-	Serial.println(bodyTemperature);
-	if(bodyTemperature < 38){
-		bodyTempDegree = 0;
+	if(BodyHeat_Time.Secondtime() > SENSOR_CHECK_TIME){
+		BodyHeat_Time.resetTime();
+		Serial.print("bodytemp= " );
+		Serial.println(bodyTemperature);
+		if(bodyTemperature < 37){
+			bodyTempDegree = 0;
+		}
+		else if(bodyTemperature < 38){
+			bodyTempDegree = 1;
+
+		}
+		else if(bodyTemperature < 39){
+			bodyTempDegree = 2;
+		}
+		else if(bodyTemperature < 40){
+			bodyTempDegree = 3;
+		}
+		else{
+			bodyTempDegree = 4;
+		}
+
+		// Add Score stack
+		if(bodyTempDegree > 0)BodyHeat_Score_Stack[bodyTempDegree-1]++;
+		
+		// Remove Score stack
+		for(int i = bodyTempDegree; i < BODY_HEAT_STACK_SIZE ; i++){
+			if(BodyHeat_Score_Stack[i] > 0)BodyHeat_Score_Stack[i]--;
+		}
+
+		// Caculate Score
+		BodyHeat_Score = 0;
+		for(int i = 0 ; i < BODY_HEAT_STACK_SIZE; i++){
+			BodyHeat_Score += BodyHeat_Score_Stack[i] * (i+1);
+		}
+
+		// Print Score
+		Serial.print("BodyHeat_Score : ");
+		Serial.println(BodyHeat_Score);	
 	}
-	else if(bodyTemperature < 39){
-		bodyTempDegree = 1;
-	}
-	else if(bodyTemperature < 40){
-		bodyTempDegree = 3;
-	}
-	else{
-		bodyTempDegree = 5;
-	}
+	
 }
 
 void checkHeat::checkTemp(int temperature)
 {
-  Serial.print("temp= " );
-	Serial.println(temperature);
-	if(temperature >= 30 && temperature < 34 ){
-		tempDegree = 1;
-	}
-	else if(temperature >= 34 && temperature < 39){
-		tempDegree = 2;
-	}
-	else if(temperature >= 39){
-		tempDegree = 3;
-	}
-	else{
-		tempDegree = 0;
+	if(Temperature_Time.Secondtime() > SENSOR_CHECK_TIME){
+		Temperature_Time.resetTime();
+		Serial.print("temp= " );
+		Serial.println(temperature);
+		if(temperature >= 30 && temperature < 34 ){
+			tempDegree = 1;
+			Temperature_Score_Stack[0]++;	
+		}
+		else if(temperature >= 34 && temperature < 39){
+			tempDegree = 2;
+			Temperature_Score_Stack[1]++;	
+		}
+		else if(temperature >= 39){
+			tempDegree = 3;
+			Temperature_Score_Stack[2]++;
+		}
+		else{
+			tempDegree = 0;
+		}
+
+		for(int i = tempDegree; i < TEMPERATURE_STACK_SIZE ; i++){
+			if(Temperature_Score_Stack[i] > 0)Temperature_Score_Stack[i]--;
+		}
+
+		Temperature_Score = 0;
+		for(int i = 0 ; i < TEMPERATURE_STACK_SIZE ; i++){
+			Temperature_Score += (Temperature_Score_Stack[i] * (i+1));
+		}
+		
+		Serial.print("Temperature_Score : ");
+		Serial.println(Temperature_Score);
 	}
 }
 
-void checkHeat::checkHeart(int heartRate)			// 정상 성인: 60 ~ 80
-{										// 정상 노인: 70 ~ 80
-	Serial.print("pulse!!= " );// 정상 어린이: 90 ~ 140
-	Serial.println(heartRate);
-	if(heartRate < 100){                   
-		heartDegree = 0;
+void checkHeat::SetCurrentTemperatureScore(){
+	Temperature_Score = 0;
+	for(int i = 0 ; i < TEMPERATURE_STACK_SIZE ; i++){
+		Temperature_Score += (Temperature_Score_Stack[i] * (i+1));
 	}
-	else{								// 분당 100회 이상일 때
-		heartDegree = 2;
+	Serial.print("Temperature_Score : ");
+	Serial.println(Temperature_Score);
+}
+void checkHeat::TemperatureScoreStackPop(int idx){
+	for(int i = idx; i < TEMPERATURE_STACK_SIZE ; i++){
+		if(Temperature_Score_Stack[i] > 0)Temperature_Score_Stack[i]--;
+	}
+}
+
+void checkHeat::checkHeart(int heartRate)			
+{
+	if(HeartRate_Time.Secondtime() > SENSOR_CHECK_TIME){
+		HeartRate_Time.resetTime();
+		Serial.print("pulse!!= " );
+		Serial.println(heartRate);
+
+		if(heartRate < 50){
+			heartDegree = 3;
+		}else if(50 <= heartRate && heartRate < 60){
+			heartDegree = 1;
+		}else if(60 <= heartRate && heartRate < 80){
+			heartDegree = 0;
+		}else if(80 <= heartRate && heartRate < 110){
+			heartDegree = 1;
+		}else if(110 <= heartRate && heartRate < 130){
+			heartDegree = 2;
+		}else if(130 <= heartRate && heartRate < 150){
+			heartDegree = 3;
+		}else{
+			heartDegree = 4;
+		}
+
+		// Add Score stack
+		if(heartDegree > 0)HeartRate_Score_Stack[heartDegree-1]++;
+		
+		// Remove Score stack
+		for(int i = heartDegree; i < HEART_RATE_STACK_SIZE ; i++){
+			if(HeartRate_Score_Stack[i] > 0)HeartRate_Score_Stack[i]--;
+		}
+
+		// Caculate Score
+		HeartRate_Score = 0;
+		for(int i = 0 ; i < HEART_RATE_STACK_SIZE; i++){
+			HeartRate_Score += HeartRate_Score_Stack[i] * (i+1);
+		}
+
+		// Print Score
+		Serial.print("HeartRate_Score : ");
+		Serial.println(HeartRate_Score);	
+	}										
+	
+}
+
+void checkHeat::checkHumidity(int humidity){
+	if(Humidity_Time.Secondtime() > SENSOR_CHECK_TIME){
+		Humidity_Time.resetTime();
+		Serial.print("Humidity = ");
+		Serial.println(humidity);	
+		if(0 <=  humidity && humidity < 60 ){
+			humidityDegree = 0;
+		}else if(60 <=  humidity && humidity < 80 ){
+			humidityDegree = 1;	
+		}else if(80 <=  humidity && humidity < 100 ){
+			humidityDegree = 2;	
+		}else{
+			//error!
+			humidityDegree = 0;
+		}	
+
+		// Add Score stack
+		if(humidityDegree > 0)Humidity_Score_Stack[humidityDegree-1]++;
+			
+		// Remove Score stack
+		for(int i = humidityDegree; i < HUMIDITY_STACK_SIZE ; i++){
+			if(Humidity_Score_Stack[i] > 0)Humidity_Score_Stack[i]--;
+		}
+
+		// Caculate Score
+		Humidity_Score = 0;
+		for(int i = 0 ; i < HUMIDITY_STACK_SIZE; i++){
+			Humidity_Score += Humidity_Score_Stack[i] * (i+1);
+		}
+
+		// Print Score
+		Serial.print("Humidity_Score : ");
+		Serial.println(Humidity_Score);	
+
 	}
 }
 
@@ -163,6 +289,7 @@ void checkHeat::checkMedian(){
 			|| temp < TEMP_MIN || temp > TEMP_MAX 
 			|| heart < HEART_MIN || heart > HEART_MAX ){
 			i--;
+			/*
 			Serial.print(bodyTemp);
 			Serial.print(" ");
 			Serial.print(BODY_TEMP_MAX);
@@ -185,7 +312,7 @@ void checkHeat::checkMedian(){
 			Serial.print(humidity);
 			Serial.print(" ");
 			Serial.println();
-			
+			*/
 			delay(100);
 			
 			continue;
@@ -204,7 +331,8 @@ void checkHeat::checkMedian(){
 	checkBodyTemp(median[BODY].getAverage(median[BODY].getMedian()));
 	checkTemp(median[TEMP].getAverage(median[TEMP].getMedian()));
 	checkHeart(median[HEART].getAverage(median[HEART].getMedian()));
-	
+	checkHumidity(median[HUMI].getAverage(median[HUMI].getMedian()));
+
 	for(int i = 0; i < MEDIAN_SIZE; i++){
 		median[i].clear();
 	}
@@ -214,12 +342,12 @@ void checkHeat::allcheck(){
 	currentMillis = millis();	
 	checkMedian();
 	
-	Serial.print("curTime!!= " );
+	/*Serial.print("curTime!!= " );
 	Serial.println(currentMillis);
 	
 	Serial.print("prevTime!!= " );
 	Serial.println(previousMillis);
-	
+	*/
 	// if(boo == 0 && (currentMillis - previousMillis) >= 30000){ // 그리고 시간값까지
 		// SendCall();
 	// }

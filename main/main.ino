@@ -12,7 +12,7 @@
 // Main Service UUID
 BLEService escSunService("19B10000-E8F2-537E-4F6C-D104768A1214"); 
 BLECharCharacteristic switch0("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
-BLEIntCharacteristic distance("19B10002-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
+BLEIntCharacteristic distanceData("19B10002-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
 BLEIntCharacteristic emergency("19B10003-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
 BLEIntCharacteristic limit_distance("19B10011-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
 BLEIntCharacteristic limit_heart_rate("19B10012-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
@@ -33,7 +33,7 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(buttonPin, INPUT);
   Serial.begin(9600);
-  blemanager = BleManager(escSunService,switch0,sensorData,distance,emergency,limit_distance,limit_heart_rate,limit_humidity);
+  blemanager = BleManager(escSunService,switch0,sensorData,distanceData,emergency,limit_distance,limit_heart_rate,limit_humidity);
    stepdetection  = StepDetection();
   stepdetection.init();
   checkheat.init(&blemanager);
@@ -59,11 +59,11 @@ void loop()
     }
     //currentTime.resetTime();  
     //stepdetection.movement();
-    Serial.print("초 : ");
-    Serial.println(currentTime.Secondtime());
-    Serial.print("분 : ");
-    Serial.println(currentTime.Minutetime());
-    blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
+    //Serial.print("초 : ");
+    //Serial.println(currentTime.Secondtime());
+    //Serial.print("분 : ");
+    //Serial.println(currentTime.Minutetime());
+    blemanager.initInLoop(central,sensorData,distanceData,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
 
  
   //Serial.println("in loop");
