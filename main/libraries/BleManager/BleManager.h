@@ -9,6 +9,7 @@ class BleManager{
 private:
 	int MAX,cnt;
 	int sensor_val[SENSOR_VAL_NUM]; // Datas have to set range in 0 ~ 256 
+	int function_switch[4];
  	bool IsDataChanged;
  	int mode;
  	int limit_distance_value,limit_heart_rate_value,limit_humidity_value;
@@ -45,5 +46,9 @@ public:
 	inline int getLimitHumidity(){return limit_humidity_value;}
 	inline void setDistance(int dis){distance_val = dis;IsDistanceChanged = true;}
 	inline void setEmergency(){IsEmergencyChanged = true;}
+	inline bool IsDistanceFunctionOn(){if(function_switch[0]==1)return true;else return false;}
+	inline bool IsHeartRateFunctionOn(){if(function_switch[1]==1)return true;else return false;}
+	inline bool IsHeatScanFunctionOn(){if(function_switch[2]==1)return true;else return false;}
+	inline bool IsHumidityFunctionOn(){if(function_switch[3]==1)return true;else return false;}
 };
 #endif
