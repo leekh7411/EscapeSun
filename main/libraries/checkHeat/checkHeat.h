@@ -1,14 +1,15 @@
 
 #ifndef checkHeat_h
 #define checkHeat_h
-
+#include <stack>
+using namespace std;
 #include "Bboobboo.h"
 #include "tempFunction.h"
 #include "InfraredTemperature.h"
 #include "pulse.h"
 #include "RunningMedian.h"
 #include "BleManager.h"
-
+#define TEMPERATURE_STACK_SIZE 3
 #define MEDIAN_SIZE		4
 
 class checkHeat
@@ -33,6 +34,9 @@ private:
     PulseSensor pulse;
 	RunningMedian median[MEDIAN_SIZE] = {RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE)};
 	
+    // Temperature Score Lable
+    stack<int>* Temperature_Score_Stack;
+    int Temperature_Score;
 public:
     void init(BleManager *Manager);
     checkHeat();

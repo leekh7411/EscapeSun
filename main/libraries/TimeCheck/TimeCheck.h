@@ -1,7 +1,6 @@
 #ifndef __TIMECHECK_H
 #define __TIMECHECK_H
 
-
 typedef class TimeCheck{
 public:
 	unsigned long prev_time;
