@@ -49,7 +49,7 @@ void loop()
 {  
   blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
   Serial.println(blemanager.getLimitDistance());
-  /*
+  
   //Serial.println("in loop");
   long currentMillis = millis();
   // if 200ms have passed, check the heart rate measurement:
@@ -82,6 +82,6 @@ void loop()
   delay(delayMsec);
   tempHumidDelay += delayMsec;
   tempDelay += delayMsec;
-  */
+  
 }
 

@@ -101,8 +101,17 @@ void BleManager::initInLoop(
 
   if(mode_switch.written()){
     mode = (int)mode_switch.value();
-    //Serial.print("mode changed : ");
-    //Serial.println(mode);
+    if(mode < 0 || mode > 15){
+      // Error?
+    }else{
+      int temp = mode;
+      int idx = 0;
+      while(idx <= 3){
+        function_switch[idx] = temp % 2;
+        idx++;
+        temp = (int)(temp/2);
+      }
+    }
   }
 
   if(limit_distance.written()){
