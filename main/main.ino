@@ -5,6 +5,7 @@
 #include "movement.h"
 #include "BleManager.h"
 #include "StepDetection.h"
+#include "TimeCheck.h"
 #include <CurieBLE.h>
 
 /*Bluetooth Low Energy*/
@@ -25,6 +26,7 @@ Bboobboo buzzer;
 checkHeat checkheat;
 BleManager blemanager;
 StepDetection stepdetection;
+TimeCheck currentTime;
 int buttonPin = 13;
 
 void setup() {
@@ -35,9 +37,10 @@ void setup() {
    stepdetection  = StepDetection();
   stepdetection.init();
   checkheat.init(&blemanager);
-  movement.init();
+  //movement.init();
   infraredTemp = InfraredTemperature();
   buzzer = Bboobboo();
+  currentTime.init();
 }
  
 
@@ -53,11 +56,23 @@ void loop()
 {  
 
   if (!stepdetection.stepEventsEnabeled) {
-  stepdetection.updateStepCount();
+     
+    stepdetection.updateStepCount();
   }
+  //  currentTime.resetTime();  
+    //stepdetection.movement();
+    Serial.print("초 : ");
+     Serial.println(currentTime.Secondtime());
+     Serial.print("분 : ");
+      Serial.println(currentTime.Minutetime());
+ // blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
+//  Serial.println(blemanager.getLimitDistance());
+  /*
+=======
   blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
   Serial.println(blemanager.getLimitDistance());
   
+>>>>>>> 4cb89aa9eb7cefe9ec539e561632e0887bd897ee
   //Serial.println("in loop");
   long currentMillis = millis();
   // if 200ms have passed, check the heart rate measurement:

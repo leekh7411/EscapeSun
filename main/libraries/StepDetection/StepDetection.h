@@ -11,6 +11,7 @@ public:
 	void init();
 	static void updateStepCount();
 	static void eventCallbacka(void);
+	void movement();
 
 }StepDetection;
 

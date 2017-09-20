@@ -15,7 +15,7 @@ analog pin 0 사용
 void StepDetection::init(){
   CurieIMU.begin();
   // turn on step detection mode:
-  CurieIMU.setStepDetectionMode(CURIE_IMU_STEP_MODE_NORMAL);
+  CurieIMU.setStepDetectionMode(CURIE_IMU_STEP_MODE_SENSITIVE);
   // enable step counting:
   CurieIMU.setStepCountEnabled(true);
  // if (stepEventsEnabeled) {
@@ -46,6 +46,17 @@ void StepDetection::updateStepCount(){
 }
 
 void StepDetection::eventCallbacka(void){
-    if (CurieIMU.stepsDetected())
-    updateStepCount();
+    if (CurieIMU.stepsDetected()){
+      updateStepCount();
+    }
+  }
+
+void StepDetection::movement(){
+  int stepCount = CurieIMU.getStepCount();
+   if (stepCount == lastStepCount) {
+      Serial.println("movemovemove");
+   }
+   else{
+      Serial.println("dontmove");
+   }
 }
