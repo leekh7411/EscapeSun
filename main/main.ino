@@ -4,6 +4,7 @@
 #include "checkHeat.h"
 #include "movement.h"
 #include "BleManager.h"
+#include "StepDetection.h"
 #include <CurieBLE.h>
 
 /*Bluetooth Low Energy*/
@@ -23,6 +24,7 @@ InfraredTemperature infraredTemp;
 Bboobboo buzzer;
 checkHeat checkheat;
 BleManager blemanager;
+StepDetection stepdetection;
 int buttonPin = 13;
 
 void setup() {
@@ -30,6 +32,8 @@ void setup() {
   pinMode(buttonPin, INPUT);
   Serial.begin(9600);
   blemanager = BleManager(escSunService,switch0,sensorData,distance,emergency,limit_distance,limit_heart_rate,limit_humidity);
+   stepdetection  = StepDetection();
+  stepdetection.init();
   checkheat.init(&blemanager);
   movement.init();
   infraredTemp = InfraredTemperature();
@@ -47,6 +51,10 @@ int tempDelay = 0;
 int tempHumidDelay = 0;
 void loop()
 {  
+
+  if (!stepdetection.stepEventsEnabeled) {
+  stepdetection.updateStepCount();
+  }
   blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
   Serial.println(blemanager.getLimitDistance());
   
