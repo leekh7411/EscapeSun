@@ -11,6 +11,7 @@ public:
 	long Minutetime();
 	void resetTime();
 	long ModulerSecondtime();
+
 }TimeCheck;
 
 #endif

@@ -54,6 +54,23 @@ int tempDelay = 0;
 int tempHumidDelay = 0;
 void loop()
 {  
+
+  if (!stepdetection.stepEventsEnabeled) {
+     
+    stepdetection.updateStepCount();
+  }
+  //  currentTime.resetTime();  
+  delay(1000);
+  //  Serial.print("초 : ");
+  //  Serial.println(currentTime.Secondtime());
+  //  Serial.print("분 : ");
+  //  Serial.println(currentTime.Minutetime());
+ // blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
+//  Serial.println(blemanager.getLimitDistance());
+  /*
+  blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
+  Serial.println(blemanager.getLimitDistance());
+
     if (!stepdetection.stepEventsEnabeled) {
       stepdetection.updateStepCount();
     }
@@ -65,7 +82,6 @@ void loop()
     //Serial.println(currentTime.Minutetime());
     blemanager.initInLoop(central,sensorData,distanceData,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
 
- 
   //Serial.println("in loop");
   long currentMillis = millis();
   // if 200ms have passed, check the heart rate measurement:
@@ -96,8 +112,9 @@ void loop()
     
    
   delay(delayMsec);
-  tempHumidDelay += delayMsec;
-  tempDelay += delayMsec;
+  */
+ // tempHumidDelay += delayMsec;
+  //tempDelay += delayMsec;
   
 }
 

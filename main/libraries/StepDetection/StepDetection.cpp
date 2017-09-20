@@ -1,8 +1,9 @@
 #include "StepDetection.h"  
-
+#include "arduino.h"
 long StepDetection::lastStepCount = 0;     
+boolean StepDetection::iammove = false;     
 StepDetection::StepDetection(){
-
+  StepDetection::iammove = false;
   StepDetection::stepEventsEnabeled = true;   // whether you're polling or using events
   StepDetection::lastStepCount = 0;              // step count on previous polling check
 }
@@ -47,16 +48,12 @@ void StepDetection::updateStepCount(){
 
 void StepDetection::eventCallbacka(void){
     if (CurieIMU.stepsDetected()){
+      movement();
       updateStepCount();
     }
   }
 
-void StepDetection::movement(){
-  int stepCount = CurieIMU.getStepCount();
-   if (stepCount == lastStepCount) {
-      Serial.println("movemovemove");
-   }
-   else{
-      Serial.println("dontmove");
-   }
+int StepDetection::movement(){
+  Serial.println("movemove");
+  iammove = true; 
 }
