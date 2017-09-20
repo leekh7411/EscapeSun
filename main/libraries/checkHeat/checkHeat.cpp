@@ -4,7 +4,6 @@
 #define BODY 			1
 #define HEART			2
 #define HUMI 	3
-
 #define BODY_TEMP_MAX	50
 #define BODY_TEMP_MIN	30
 
@@ -27,6 +26,8 @@ checkHeat::checkHeat()
 	heartDegree = 0;
 	count = 0;
 	buzzer = Bboobboo();
+	Temperature_Score_Stack = new stack<int>[TEMPERATURE_STACK_SIZE];
+	Temperature_Score = 0;
 }
 
 void checkHeat::init(BleManager *Manager){
