@@ -30,6 +30,7 @@ checkHeat::checkHeat()
 	BodyHeat_Time.init();
 	HeartRate_Time.init();
 	Humidity_Time.init();
+	Movement_Time.init();
 }
 
 void checkHeat::init(BleManager *Manager){
@@ -274,6 +275,21 @@ void checkHeat::checkHumidity(int humidity){
 	}
 }
 
+int checkHeat::checkMovement(StepDetection stepdetect){
+	Movement_Time.resetTime();
+	stepdetect.iammove = false;
+	//stepdetect.updateStepCount();
+	int moveNum= 0;
+	while(Movement_Time.Secondtime() < SENSOR_CHECK_TIME){
+
+		 if(stepdetect.iammove == 1){
+		 	//움직임이 있다.
+		 	return 1;
+		 }
+		delay(1000);
+	}
+	return 0;
+}
 void checkHeat::checkMedian(){
 	infraredTemp = InfraredTemperature();
 	mTemp.temp_est(); 
@@ -361,7 +377,7 @@ bool checkHeat::heatCramps(){
 	return false;
 }
 
-bool heatExhaustion(){
+bool checkHeat::heatExhaustion(){
 
 	if(bodyTempDegree > 1){
 		if(Humidity_Score + Temperature_Score + HeartRate_Score > 1200){
@@ -377,7 +393,7 @@ bool heatExhaustion(){
 
 }
 
-bool heatStroke(){
+bool checkHeat::heatStroke(){
 	if(bodyTempDegree > 3 ){
 		return true;
 	}
@@ -389,7 +405,7 @@ bool heatStroke(){
 	return false;
 }
 
-void heatAllcheck(){
+void checkHeat::heatAllcheck(){
 	int degree = 0;
 	if(heatStroke()){
 		degree = 3;
@@ -397,7 +413,7 @@ void heatAllcheck(){
 	else if(heatExhaustion()){
 		degree = 2;
 	}
-	else if(heartCramps()){
+	else if(heatCramps()){
 		degree = 1;
 	}
 
@@ -416,7 +432,12 @@ void heatAllcheck(){
 			// 그늘이니까 쉬는거로 간주
 		}
 		else{
-			//움직임을 검사해서 부저를 울린다.
+			if(checkMovement() == 1){
+				//움직임이 있다.
+			}
+			else{
+				//움직임이 없다. 부저를 울린다.
+			}
 		}
 	}
 

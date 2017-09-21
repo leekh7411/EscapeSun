@@ -2,10 +2,9 @@
 #include "InfraredTemperature.h"
 #include "Bboobboo.h"
 #include "checkHeat.h"
-#include "movement.h"
 #include "BleManager.h"
-#include "StepDetection.h"
 #include "TimeCheck.h"
+#include "StepDetection.h"
 #include <CurieBLE.h>
 
 /*Bluetooth Low Energy*/
@@ -20,13 +19,12 @@ BLEIntCharacteristic limit_humidity("19B10013-E8F2-537E-4F6C-D104768A1214", BLER
 BLECharacteristic sensorData("19B10006-E8F2-537E-4F6C-D104768A1214",BLERead | BLENotify, 4);
 BLEDevice central;
 PulseSensor pulse;
-Movement movement;
 InfraredTemperature infraredTemp;
 Bboobboo buzzer;
-checkHeat checkheat;
+checkHeat checkheat ;
 BleManager blemanager;
-StepDetection stepdetection;
 TimeCheck currentTime;
+StepDetection stepdetect;
 int buttonPin = 13;
 
 void setup() {
@@ -34,12 +32,11 @@ void setup() {
   pinMode(buttonPin, INPUT);
   Serial.begin(9600);
   blemanager = BleManager(escSunService,switch0,sensorData,distanceData,emergency,limit_distance,limit_heart_rate,limit_humidity);
-   stepdetection  = StepDetection();
-  stepdetection.init();
   checkheat.init(&blemanager);
-  //movement.init();
   infraredTemp = InfraredTemperature();
   buzzer = Bboobboo();
+  stepdetect = StepDetection();
+  stepdetect.init();
   currentTime.init();
 }
  
@@ -55,16 +52,18 @@ int tempHumidDelay = 0;
 void loop()
 {  
 
-  if (!stepdetection.stepEventsEnabeled) {
+  if (!stepdetect.stepEventsEnabeled) {
      
-    stepdetection.updateStepCount();
+   stepdetect.updateStepCount();
   }
   //  currentTime.resetTime();  
-  delay(1000);
-  //  Serial.print("초 : ");
-  //  Serial.println(currentTime.Secondtime());
-  //  Serial.print("분 : ");
-  //  Serial.println(currentTime.Minutetime());
+  //delay(1000);
+ //   Serial.println("초 : ");
+//    Serial.println(currentTime.Secondtime());
+//    Serial.print("분 : ");
+//    Serial.println(currentTime.Minutetime());
+     checkheat.checkMovement(stepdetect);
+    
  // blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
 //  Serial.println(blemanager.getLimitDistance());
   /*

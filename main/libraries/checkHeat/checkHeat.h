@@ -7,6 +7,7 @@
 #include "RunningMedian.h"
 #include "BleManager.h"
 #include "TimeCheck.h"
+#include "StepDetection.h"
 #define TEMPERATURE_STACK_SIZE 3
 #define BODY_HEAT_STACK_SIZE 4
 #define HEART_RATE_STACK_SIZE 7
@@ -56,6 +57,8 @@ private:
     TimeCheck Humidity_Time;
     int Humidity_Score;
 
+    TimeCheck Movement_Time;
+    int Movement_Score;
 public:
     void init(BleManager *Manager);
     checkHeat();
@@ -64,6 +67,7 @@ public:
     void checkTemp(int);
     void checkHeart(int);
     void checkHumidity(int);
+    int checkMovement(StepDetection stepdetect);
     void allcheck();
     void deBoo();
 	void checkMedian();

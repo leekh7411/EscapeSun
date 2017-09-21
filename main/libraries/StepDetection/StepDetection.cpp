@@ -25,7 +25,7 @@ void StepDetection::init(){
    CurieIMU.attachInterrupt(eventCallbacka);
     CurieIMU.interrupts(CURIE_IMU_STEP);  // turn on step detection
 
-    Serial.println("IMU initialisation complete, waiting for events...");
+    //Serial.println("IMU initialisation complete, waiting for events...");
  // }
 }
 
@@ -54,6 +54,5 @@ void StepDetection::eventCallbacka(void){
   }
 
 int StepDetection::movement(){
-  Serial.println("movemove");
   iammove = true; 
 }
