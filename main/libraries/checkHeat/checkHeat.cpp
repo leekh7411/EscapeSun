@@ -110,7 +110,6 @@ void checkHeat::checkBodyTemp(float bodyTemperature)
 		}
 		else if(bodyTemperature < 38){
 			bodyTempDegree = 1;
-
 		}
 		else if(bodyTemperature < 39){
 			bodyTempDegree = 2;
@@ -217,8 +216,9 @@ void checkHeat::checkHeart(int heartRate)
 		}
 
 		// Add Score stack
-		if(heartDegree > 0)HeartRate_Score_Stack[heartDegree-1]++;
-		
+		if(tempDegree){
+			if(heartDegree > 0)HeartRate_Score_Stack[heartDegree-1]++;
+		}
 		// Remove Score stack
 		for(int i = heartDegree; i < HEART_RATE_STACK_SIZE ; i++){
 			if(HeartRate_Score_Stack[i] > 0)HeartRate_Score_Stack[i]--;
@@ -244,18 +244,18 @@ void checkHeat::checkHumidity(int humidity){
 		Serial.println(humidity);	
 		if(0 <=  humidity && humidity < 60 ){
 			humidityDegree = 0;
-		}else if(60 <=  humidity && humidity < 80 ){
+		}else if(70 <=  humidity && humidity < 90 ){
 			humidityDegree = 1;	
-		}else if(80 <=  humidity && humidity < 100 ){
+		}else if(90 <=  humidity && humidity < 100 ){
 			humidityDegree = 2;	
 		}else{
 			//error!
 			humidityDegree = 0;
 		}	
-
-		// Add Score stack
-		if(humidityDegree > 0)Humidity_Score_Stack[humidityDegree-1]++;
-			
+		if(tempDegree){
+			// Add Score stack
+			if(humidityDegree > 0)Humidity_Score_Stack[humidityDegree-1]++;
+		}
 		// Remove Score stack
 		for(int i = humidityDegree; i < HUMIDITY_STACK_SIZE ; i++){
 			if(Humidity_Score_Stack[i] > 0)Humidity_Score_Stack[i]--;
@@ -348,7 +348,76 @@ void checkHeat::allcheck(){
 	Serial.print("prevTime!!= " );
 	Serial.println(previousMillis);
 	*/
-	// if(boo == 0 && (currentMillis - previousMillis) >= 30000){ // �׸��� �ð�������
+	// if(boo == 0 && (currentMillis - previousMillis) >= 30000){ // ±×¸®°í ½Ã°£°ª±îÁö
 		// SendCall();
 	// }
+}
+
+
+bool checkHeat::heatCramps(){
+	if(Humidity_Score + Temperature_Score > 600){
+		return true;
+	}
+	return false;
+}
+
+bool heatExhaustion(){
+
+	if(bodyTempDegree > 1){
+		if(Humidity_Score + Temperature_Score + HeartRate_Score > 1200){
+			return true;
+		}
+	}
+	else if(bodyTempDegree == 0){
+		if(Humidity_Score + Temperature_Score + HeartRate_Score > 1500){
+			return true;
+		}
+	}
+	return false;
+
+}
+
+bool heatStroke(){
+	if(bodyTempDegree > 3 ){
+		return true;
+	}
+	else if(bodyTempDegree > 2){
+		if(Humidity_Score + Temperature_Score + HeartRate_Score > 900){
+			return true;
+		}
+	}
+	return false;
+}
+
+void heatAllcheck(){
+	int degree = 0;
+	if(heatStroke()){
+		degree = 3;
+	}
+	else if(heatExhaustion()){
+		degree = 2;
+	}
+	else if(heartCramps()){
+		degree = 1;
+	}
+
+	if(degree == 1){
+		// 중증 1 의 경고를 보내준다.
+	}
+	else if (degree == 2){
+		// 중증 2의 경고를 보내준다.
+	}
+	else if (degree == 3){
+		// 중증 3의 경고를 보내준다.
+	}
+
+	if(degree != 0 ){
+		if (tempDegree  == 0){
+			// 그늘이니까 쉬는거로 간주
+		}
+		else{
+			//움직임을 검사해서 부저를 울린다.
+		}
+	}
+
 }

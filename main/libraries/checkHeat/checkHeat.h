@@ -71,6 +71,10 @@ public:
     // Temperature Score Functions
     void SetCurrentTemperatureScore();
     void TemperatureScoreStackPop(int idx);
+    bool heatCramps(); //열경련 and 열실신 
+    bool heatExhaustion();
+    bool heatStroke();
+    void heatAllcheck();
 };
 
 
