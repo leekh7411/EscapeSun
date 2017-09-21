@@ -279,16 +279,16 @@ int checkHeat::checkMovement(StepDetection stepdetect){
 	Movement_Time.resetTime();
 	stepdetect.iammove = false;
 	//stepdetect.updateStepCount();
-	int moveNum= 0;
+	int movementnum = 0;
 	while(Movement_Time.Secondtime() < SENSOR_CHECK_TIME){
 
 		 if(stepdetect.iammove == 1){
 		 	//움직임이 있다.
-		 	return 1;
+		 	movementnum = 1;
 		 }
 		delay(1000);
 	}
-	return 0;
+	return movementnum;
 }
 void checkHeat::checkMedian(){
 	infraredTemp = InfraredTemperature();
@@ -405,7 +405,7 @@ bool checkHeat::heatStroke(){
 	return false;
 }
 
-void checkHeat::heatAllcheck(){
+void checkHeat::heatAllcheck(StepDetection stepdetect){
 	int degree = 0;
 	if(heatStroke()){
 		degree = 3;
@@ -432,7 +432,7 @@ void checkHeat::heatAllcheck(){
 			// 그늘이니까 쉬는거로 간주
 		}
 		else{
-			if(checkMovement() == 1){
+			if(checkMovement(stepdetect) == 1){
 				//움직임이 있다.
 			}
 			else{

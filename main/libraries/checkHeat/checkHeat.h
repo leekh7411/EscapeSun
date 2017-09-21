@@ -78,7 +78,7 @@ public:
     bool heatCramps(); //열경련 and 열실신 
     bool heatExhaustion();
     bool heatStroke();
-    void heatAllcheck();
+    void heatAllcheck(StepDetection stepdetect);
 };
 
 

@@ -62,7 +62,7 @@ void loop()
 //    Serial.println(currentTime.Secondtime());
 //    Serial.print("분 : ");
 //    Serial.println(currentTime.Minutetime());
-     checkheat.checkMovement(stepdetect);
+      Serial.println(checkheat.checkMovement(stepdetect));
     
  // blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
 //  Serial.println(blemanager.getLimitDistance());
