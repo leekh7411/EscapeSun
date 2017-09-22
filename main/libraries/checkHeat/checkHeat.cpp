@@ -384,7 +384,7 @@ bool checkHeat::heatExhaustion(){
 			return true;
 		}
 	}
-	else if(bodyTempDegree == 0){
+	else if(bodyTempDegree >= 0){
 		if(Humidity_Score + Temperature_Score + HeartRate_Score > 1500){
 			return true;
 		}
@@ -433,10 +433,11 @@ void checkHeat::heatAllcheck(StepDetection stepdetect){
 		}
 		else{
 			if(checkMovement(stepdetect) == 1){
-				//움직임이 있다.
+				//움직임이 있다. 고로 부저를 울리지 않는다. 
 			}
 			else{
 				//움직임이 없다. 부저를 울린다.
+				buzzer.turnOn();
 			}
 		}
 	}
