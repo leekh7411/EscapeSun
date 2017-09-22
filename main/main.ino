@@ -55,70 +55,22 @@ int tempHumidDelay = 0;
 void loop()
 {  
 
-<<<<<<< HEAD
   blemanager.initInLoop(central,sensorData,distanceData,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
 
-  if (!stepdetection.stepEventsEnabeled) {
-     stepdetection.updateStepCount();
-  }
-    
-  blemanager.initInLoop(central,sensorData,distanceData,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
-=======
   if (!stepdetect.stepEventsEnabeled) {
-     
-   stepdetect.updateStepCount();
+     stepdetect.updateStepCount();
   }
-  //  currentTime.resetTime();  
-  //delay(1000);
- //   Serial.println("초 : ");
-//    Serial.println(currentTime.Secondtime());
-//    Serial.print("분 : ");
-//    Serial.println(currentTime.Minutetime());
-      Serial.println(checkheat.checkMovement(stepdetect));
-    
- // blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
-//  Serial.println(blemanager.getLimitDistance());
-  /*
-  blemanager.initInLoop(central,sensorData,distance,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
-  Serial.println(blemanager.getLimitDistance());
-
-    if (!stepdetection.stepEventsEnabeled) {
-      stepdetection.updateStepCount();
-    }
-    //currentTime.resetTime();  
-    //stepdetection.movement();
-    //Serial.print("초 : ");
-    //Serial.println(currentTime.Secondtime());
-    //Serial.print("분 : ");
-    //Serial.println(currentTime.Minutetime());
-    blemanager.initInLoop(central,sensorData,distanceData,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
->>>>>>> e5e49888e084fee484ffd0ced90031a45c5bc0c1
-
+   
   long currentMillis = millis();
   // if 200ms have passed, check the heart rate measurement:
   if (currentMillis - previousMillis >= 200) {
     previousMillis = currentMillis;
   }
-
-  
-  // Note: I assume the sleep delay is way longer than the
-  // number of cycles used to run the code hence the error
-  // is negligible for math.
-
-  if(tempDelay > 2000){
-    
-    if(isZeroMotion == true)  // 모션이 없을 때
-      Serial.println("------zero motion detected!-------");
-    if(isZeroMotion == false) // 모션이 감지됨...
-      Serial.println("======motion detected======");
-    
-    tempDelay = 0;
-  }
  
+
   if(tempHumidDelay > 1000){
-     //checkheat.allcheck();    // --> Original MODE
-     checkheat.checkTestData(); // --> Test MODE
-     checkheat.sendCall(isZeroMotion);
+     checkheat.allcheck(stepdetect); // --> Original MODE
+     //checkheat.checkTestData();    // --> Test MODE
      tempHumidDelay = 0;
   }
     

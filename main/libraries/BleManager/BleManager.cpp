@@ -88,7 +88,7 @@ void BleManager::initInLoop(
     Serial.println((int)data[3]);
     */
     Serial.println("----> Debugging --> Sensor written!");
-    const unsigned char byte* data = sensorData.value();
+    const unsigned char* data = sensorData.value();
     for(int i = 0 ; i < SENSOR_VAL_NUM ; i++){
       sensor_val[i] = (const unsigned char)data[i];
       IsDataChanged = true;

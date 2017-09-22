@@ -384,22 +384,10 @@ void checkHeat::getTestDataFromBLE(){
 }
 
 
-void checkHeat::allcheck(){
+void checkHeat::allcheck(StepDetection stepdetect){
 	currentMillis = millis();	
 	checkMedian();
-<<<<<<< HEAD
-=======
-	
-	/*Serial.print("curTime!!= " );
-	Serial.println(currentMillis);
-	
-	Serial.print("prevTime!!= " );
-	Serial.println(previousMillis);
-	*/
-	// if(boo == 0 && (currentMillis - previousMillis) >= 30000){ // ±×¸®°í ½Ã°£°ª±îÁö
-		// SendCall();
-	// }
->>>>>>> e5e49888e084fee484ffd0ced90031a45c5bc0c1
+	heatAllcheck(stepdetect);
 }
 
 
@@ -451,26 +439,32 @@ void checkHeat::heatAllcheck(StepDetection stepdetect){
 	}
 
 	if(degree == 1){
-		// 중증 1 의 경고를 보내준다.
+		// Level 1 Emergency advice 
+		
 	}
 	else if (degree == 2){
-		// 중증 2의 경고를 보내준다.
+		// Level 2 Emergency advice 
+
 	}
 	else if (degree == 3){
-		// 중증 3의 경고를 보내준다.
+		// Level 3 Emergency advice 
+
 	}
 
 	if(degree != 0 ){
 		if (tempDegree  == 0){
-			// 그늘이니까 쉬는거로 간주
+			// In shade state
+
 		}
 		else{
 			if(checkMovement(stepdetect) == 1){
-				//움직임이 있다.
+				// detect movement
+
 			}
 			else{
-				//움직임이 없다. 부저를 울린다.
-			}
+				// silent.. Buzzer On!
+
+			}	
 		}
 	}
 
