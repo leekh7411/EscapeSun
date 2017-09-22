@@ -82,7 +82,7 @@ public:
     void SetCurrentTemperatureScore();
     void TemperatureScoreStackPop(int idx);
     // Test Function
-    void checkTestData();
+    void checkTestData(StepDetection stepdetect);
     void resetTestData();
     void getTestDataFromBLE();
     bool heatCramps(); //열경련 and 열실신 

@@ -69,8 +69,8 @@ void loop()
  
 
   if(tempHumidDelay > 1000){
-     checkheat.allcheck(stepdetect); // --> Original MODE
-     //checkheat.checkTestData();    // --> Test MODE
+     //checkheat.allcheck(stepdetect); // --> Original MODE
+     checkheat.checkTestData(stepdetect);    // --> Test MODE
      tempHumidDelay = 0;
   }
     

@@ -353,13 +353,14 @@ void checkHeat::checkMedian(){
 }
 
 
-void checkHeat::checkTestData(){
+void checkHeat::checkTestData(StepDetection stepdetect){
 	currentMillis = millis();
 	getTestDataFromBLE();
 	checkBodyTemp(test_body_heat);
 	checkTemp(test_temperature);
 	checkHeart(test_heart_rate);
 	checkHumidity(test_humidity);
+	heatAllcheck(stepdetect);
 }
 
 
@@ -440,7 +441,7 @@ void checkHeat::heatAllcheck(StepDetection stepdetect){
 
 	if(degree == 1){
 		// Level 1 Emergency advice 
-		
+
 	}
 	else if (degree == 2){
 		// Level 2 Emergency advice 
