@@ -406,7 +406,7 @@ bool checkHeat::heatExhaustion(){
 			return true;
 		}
 	}
-	else if(bodyTempDegree == 0){
+	else if(bodyTempDegree >= 0){
 		if(Humidity_Score + Temperature_Score + HeartRate_Score > 1500){
 			return true;
 		}
@@ -464,8 +464,8 @@ void checkHeat::heatAllcheck(StepDetection stepdetect){
 			}
 			else{
 				// silent.. Buzzer On!
-
-			}	
+				buzzer.turnOn();
+			}
 		}
 	}
 
