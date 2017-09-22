@@ -16,7 +16,7 @@ BLEIntCharacteristic emergency("19B10003-E8F2-537E-4F6C-D104768A1214", BLERead |
 BLEIntCharacteristic limit_distance("19B10011-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
 BLEIntCharacteristic limit_heart_rate("19B10012-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
 BLEIntCharacteristic limit_humidity("19B10013-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
-BLECharacteristic sensorData("19B10006-E8F2-537E-4F6C-D104768A1214",BLERead | BLENotify, 4);
+BLECharacteristic sensorData("19B10006-E8F2-537E-4F6C-D104768A1214",BLERead | BLEWrite, 4);
 BLEDevice central;
 PulseSensor pulse;
 InfraredTemperature infraredTemp;
@@ -38,6 +38,9 @@ void setup() {
   stepdetect = StepDetection();
   stepdetect.init();
   currentTime.init();
+
+  // For test
+  checkheat.resetTestData();
 }
  
 
@@ -52,6 +55,15 @@ int tempHumidDelay = 0;
 void loop()
 {  
 
+<<<<<<< HEAD
+  blemanager.initInLoop(central,sensorData,distanceData,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
+
+  if (!stepdetection.stepEventsEnabeled) {
+     stepdetection.updateStepCount();
+  }
+    
+  blemanager.initInLoop(central,sensorData,distanceData,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
+=======
   if (!stepdetect.stepEventsEnabeled) {
      
    stepdetect.updateStepCount();
@@ -80,8 +92,8 @@ void loop()
     //Serial.print("분 : ");
     //Serial.println(currentTime.Minutetime());
     blemanager.initInLoop(central,sensorData,distanceData,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity);
+>>>>>>> e5e49888e084fee484ffd0ced90031a45c5bc0c1
 
-  //Serial.println("in loop");
   long currentMillis = millis();
   // if 200ms have passed, check the heart rate measurement:
   if (currentMillis - previousMillis >= 200) {
@@ -104,16 +116,17 @@ void loop()
   }
  
   if(tempHumidDelay > 1000){
-      checkheat.allcheck();
-      checkheat.sendCall(isZeroMotion);
-      tempHumidDelay = 0;
-    }
+     //checkheat.allcheck();    // --> Original MODE
+     checkheat.checkTestData(); // --> Test MODE
+     checkheat.sendCall(isZeroMotion);
+     tempHumidDelay = 0;
+  }
     
    
-  delay(delayMsec);
-  */
- // tempHumidDelay += delayMsec;
-  //tempDelay += delayMsec;
+ delay(delayMsec);
+ 
+ tempHumidDelay += delayMsec;
+ tempDelay += delayMsec;
   
 }
 

@@ -2,12 +2,10 @@
 #define TEMP 			0
 #define BODY 			1
 #define HEART			2
-#define HUMI 	3
+#define HUMI 			3
 #define BODY_TEMP_MAX	50
 #define BODY_TEMP_MIN	30
-
 #define TEMP_MAX		50
-
 #define TEMP_MIN		10
 #define HEART_MAX		200
 #define HEART_MIN		40
@@ -354,9 +352,43 @@ void checkHeat::checkMedian(){
 	}
 }
 
+
+void checkHeat::checkTestData(){
+	currentMillis = millis();
+	getTestDataFromBLE();
+	checkBodyTemp(test_body_heat);
+	checkTemp(test_temperature);
+	checkHeart(test_heart_rate);
+	checkHumidity(test_humidity);
+}
+
+
+void checkHeat::resetTestData(){
+    if(manager != NULL){
+        manager->setIntSensorValue(0,28);
+        manager->setIntSensorValue(1,35);
+        manager->setIntSensorValue(2,75);
+        manager->setIntSensorValue(3,30);
+    }
+    test_temperature = 28;
+    test_body_heat = 35;
+    test_heart_rate = 75;
+    test_humidity = 30;
+}
+
+void checkHeat::getTestDataFromBLE(){
+	test_temperature = manager->getIntSensorValue(0);
+    test_body_heat = manager->getIntSensorValue(1);
+    test_heart_rate = manager->getIntSensorValue(2);
+    test_humidity = manager->getIntSensorValue(3);
+}
+
+
 void checkHeat::allcheck(){
 	currentMillis = millis();	
 	checkMedian();
+<<<<<<< HEAD
+=======
 	
 	/*Serial.print("curTime!!= " );
 	Serial.println(currentMillis);
@@ -367,6 +399,7 @@ void checkHeat::allcheck(){
 	// if(boo == 0 && (currentMillis - previousMillis) >= 30000){ // ±×¸®°í ½Ã°£°ª±îÁö
 		// SendCall();
 	// }
+>>>>>>> e5e49888e084fee484ffd0ced90031a45c5bc0c1
 }
 
 

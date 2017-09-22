@@ -76,6 +76,25 @@ void BleManager::initInLoop(
     BLEIntCharacteristic limit_heart_rate,
     BLEIntCharacteristic limit_humidity
   ){
+
+  // this is a testing module ++++++++++++++++++++++++++++++++++++++++++++++++++
+  if(sensorData.written()){
+    /*
+    Serial.println("Read Sensor BLE value");
+    const byte* data = sensorData.value(); 
+    Serial.println((int)data[0]);
+    Serial.println((int)data[1]);
+    Serial.println((int)data[2]);
+    Serial.println((int)data[3]);
+    */
+    Serial.println("----> Debugging --> Sensor written!");
+    const unsigned char byte* data = sensorData.value();
+    for(int i = 0 ; i < SENSOR_VAL_NUM ; i++){
+      sensor_val[i] = (const unsigned char)data[i];
+      IsDataChanged = true;
+    }
+  }// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
   if(IsDataChanged){
     IsDataChanged = false;
     _central = BLE.central();
@@ -86,8 +105,10 @@ void BleManager::initInLoop(
       (const unsigned char)(sensor_val[3])
     };
     sensorData.setValue(values,SENSOR_VAL_NUM);
-    Serial.println("---------------> Sensor Data Updated!"); 
+    Serial.println("---------------> Sensor Data Updated!");
+
   }
+
 
   if(IsEmergencyChanged){
     IsEmergencyChanged = false;
