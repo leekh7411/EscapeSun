@@ -56,6 +56,12 @@ private:
     TimeCheck Humidity_Time;
     int Humidity_Score;
 
+    // Test Data
+    int test_temperature;
+    int test_heart_rate;
+    int test_body_heat;
+    int test_humidity;
+
 public:
     void init(BleManager *Manager);
     checkHeat();
@@ -71,6 +77,10 @@ public:
     // Temperature Score Functions
     void SetCurrentTemperatureScore();
     void TemperatureScoreStackPop(int idx);
+    // Test Function
+    void checkTestData();
+    void resetTestData();
+    void getTestDataFromBLE();
 };
 
 

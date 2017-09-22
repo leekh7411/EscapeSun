@@ -40,6 +40,7 @@ public:
 	    BLEIntCharacteristic limit_humidity
   	); 
 	void setIntSensorValue(int index, int value); // set the value in the integer characteristic
+	int getIntSensorValue(int index){if(0 <= index && index <= 3)return sensor_val[index];else return 0;}
 	inline int getMode(){return mode;}
 	inline int getLimitDistance(){return limit_distance_value;}
 	inline int getLimitHeartRate(){return limit_heart_rate_value;}
