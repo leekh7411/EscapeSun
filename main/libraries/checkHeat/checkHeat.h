@@ -7,6 +7,7 @@
 #include "RunningMedian.h"
 #include "BleManager.h"
 #include "TimeCheck.h"
+#include "StepDetection.h"
 #define TEMPERATURE_STACK_SIZE 3
 #define BODY_HEAT_STACK_SIZE 4
 #define HEART_RATE_STACK_SIZE 7
@@ -56,12 +57,17 @@ private:
     TimeCheck Humidity_Time;
     int Humidity_Score;
 
+<<<<<<< HEAD
     // Test Data
     int test_temperature;
     int test_heart_rate;
     int test_body_heat;
     int test_humidity;
 
+=======
+    TimeCheck Movement_Time;
+    int Movement_Score;
+>>>>>>> e5e49888e084fee484ffd0ced90031a45c5bc0c1
 public:
     void init(BleManager *Manager);
     checkHeat();
@@ -70,6 +76,7 @@ public:
     void checkTemp(int);
     void checkHeart(int);
     void checkHumidity(int);
+    int checkMovement(StepDetection stepdetect);
     void allcheck();
     void deBoo();
 	void checkMedian();
@@ -77,10 +84,17 @@ public:
     // Temperature Score Functions
     void SetCurrentTemperatureScore();
     void TemperatureScoreStackPop(int idx);
+<<<<<<< HEAD
     // Test Function
     void checkTestData();
     void resetTestData();
     void getTestDataFromBLE();
+=======
+    bool heatCramps(); //열경련 and 열실신 
+    bool heatExhaustion();
+    bool heatStroke();
+    void heatAllcheck(StepDetection stepdetect);
+>>>>>>> e5e49888e084fee484ffd0ced90031a45c5bc0c1
 };
 
 
