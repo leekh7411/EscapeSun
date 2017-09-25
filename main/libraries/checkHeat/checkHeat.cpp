@@ -23,6 +23,9 @@ checkHeat::checkHeat()
 	heartDegree = 0;
 	humidityDegree = 0;
 	count = 0;
+	EMG_CODE = 0;
+	EMG_level_01 = 0;
+	EMG_level_02 = 0;
 	buzzer = Bboobboo();
 	Temperature_Time.init();
 	BodyHeat_Time.init();
@@ -58,28 +61,26 @@ void checkHeat::sendCall(int zeroMotion)
 		buzzer.turnOn();
 		int buttonState;    
 
-    while(1) {
-    	laterMillis = millis();
-    	bool flag;
-    	if(laterMillis-currentMillis > 30000) {
-    			Serial.println("time 30 over");
-    			if(!flag){
-    				// send messeage
-    				//manager->setIntSensorValue(, int(119));
-    			}
-    			deBoo();
-    			delay(1500);
-    			buzzer.turnOn();
-    	}
+	    while(1) {
+	    	laterMillis = millis();
+	    	bool flag;
+	    	if(laterMillis-currentMillis > 30000) {
+	    			Serial.println("time 30 over");
+	    			if(!flag){
+	    				// send messeage
+	    				//manager->setIntSensorValue(, int(119));
+	    			}
+	    			deBoo();
+	    			delay(1500);
+	    			buzzer.turnOn();
+	    	}
 
-      buttonState = digitalRead(13);    
-      if(buttonState == LOW){         
-         deBoo();
-         break;
-      } 
-    }
-
-
+	      buttonState = digitalRead(13);    
+	      if(buttonState == LOW){         
+	         deBoo();
+	         break;
+	      } 
+	    }
 	}
 }
 
@@ -304,16 +305,18 @@ void checkHeat::checkMedian(){
 			|| heart < HEART_MIN || heart > HEART_MAX ){
 			i--;
 			/*
+			Serial.print("BodyTemp: ");
 			Serial.print(bodyTemp);
-			Serial.print(" ");
+			Serial.print(" / MAX :");
 			Serial.print(BODY_TEMP_MAX);
-			Serial.print(" ");
+			Serial.print(" / MIN :");
 			Serial.println(BODY_TEMP_MIN);
 			
+			Serial.print("Temperature :");
 			Serial.print(temp);
-			Serial.print(" ");
+			Serial.print(" / MAX :");
 			Serial.print(TEMP_MAX);
-			Serial.print(" ");
+			Serial.print(" / MIN :");
 			Serial.println(TEMP_MIN);
 			
 			Serial.print(heart);
@@ -440,33 +443,83 @@ void checkHeat::heatAllcheck(StepDetection stepdetect){
 	}
 
 	if(degree == 1){
-		// Level 1 Emergency advice 
-
+		// Advice Level 1 Emergency advice CODE x1
+		manager->setEmergency(getEMGCODE_set01(1));
 	}
-	else if (degree == 2){
-		// Level 2 Emergency advice 
-
+	else if(degree == 2){
+		// Advice Level 2 Emergency advice CODE x2
+		manager->setEmergency(getEMGCODE_set01(2));
 	}
-	else if (degree == 3){
-		// Level 3 Emergency advice 
-
+	else if(degree == 3){
+		// Advice Level 3 Emergency advice CODE x3 
+		manager->setEmergency(getEMGCODE_set01(3));
+	}else{
+		// Advice Level 0 Emergency advice CODE x0
+		manager->setEmergency(getEMGCODE_set01(0));
 	}
 
 	if(degree != 0 ){
-		if (tempDegree  == 0){
-			// In shade state
-
+		if(tempDegree  == 0){
+			// In shade state Emergency advice CODE 0x
+			manager->setEmergency(getEMGCODE_set02(0));	
 		}
 		else{
 			if(checkMovement(stepdetect) == 1){
-				// detect movement
-
+				// ... detect movement Emergency advice CODE 1x
+				manager->setEmergency(getEMGCODE_set02(1));	
 			}
 			else{
-				// silent.. Buzzer On!
+				// silent.. Buzzer On! Emergency advice CODE 2x
+				manager->setEmergency(getEMGCODE_set02(2));
 				buzzer.turnOn();
+				checkBuzzer();
 			}
 		}
+	}else{
+		// Emergency advice CODE 0x
+		manager->setEmergency(getEMGCODE_set02(0));
 	}
 
+	Serial.print("Current State : ");
+	Serial.println(getEmergencyCode());
+
+}
+
+bool checkHeat::checkBuzzer(){
+	bool flag = false;
+	long currentMillis = millis();
+	long laterMillis;
+	while(1){
+    	laterMillis = millis();
+    	if(laterMillis-currentMillis > 30000){
+    			Serial.println("time 30 over");
+    			if(!flag){
+    				// silent.. Buzzer On! Emergency advice CODE 3x
+    				manager->setEmergency(getEMGCODE_set02(3));
+    				flag = true;
+    			}
+    			deBoo();
+    			delay(1500);
+    			buzzer.turnOn();
+    	}
+
+        int buttonState = digitalRead(13);    
+        if(buttonState == LOW){  
+            deBoo();
+            break;
+        } 
+    }
+    return true;
+}
+
+int checkHeat::getEMGCODE_set01(int new_level_01){
+	EMG_level_01 = new_level_01;
+	EMG_CODE = EMG_level_01 + EMG_level_02 * 10;
+	return EMG_CODE;
+}
+
+int checkHeat::getEMGCODE_set02(int new_level_02){
+	EMG_level_02 = new_level_02;
+	EMG_CODE = EMG_level_01 + EMG_level_02 * 10;
+	return EMG_CODE;
 }

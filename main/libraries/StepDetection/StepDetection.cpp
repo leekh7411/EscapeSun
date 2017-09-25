@@ -1,11 +1,12 @@
 #include "StepDetection.h"  
 #include "arduino.h"
 long StepDetection::lastStepCount = 0;     
-boolean StepDetection::iammove = false;     
+boolean StepDetection::iammove = false;  
+boolean StepDetection::IsStepUpdate = false;   
 StepDetection::StepDetection(){
-  StepDetection::iammove = false;
+  StepDetection::iammove = false;             
   StepDetection::stepEventsEnabeled = true;   // whether you're polling or using events
-  StepDetection::lastStepCount = 0;              // step count on previous polling check
+  StepDetection::lastStepCount = 0;           // step count on previous polling check
 }
 
 /*
@@ -19,14 +20,14 @@ void StepDetection::init(){
   CurieIMU.setStepDetectionMode(CURIE_IMU_STEP_MODE_SENSITIVE);
   // enable step counting:
   CurieIMU.setStepCountEnabled(true);
- // if (stepEventsEnabeled) {
-    // attach the eventCallback function as the
-    // step event handler:
-   CurieIMU.attachInterrupt(eventCallbacka);
-    CurieIMU.interrupts(CURIE_IMU_STEP);  // turn on step detection
+  // if (stepEventsEnabeled) {
+  // attach the eventCallback function as the
+  // step event handler:
+  CurieIMU.attachInterrupt(eventCallbacka);
+  CurieIMU.interrupts(CURIE_IMU_STEP);  // turn on step detection
 
-    //Serial.println("IMU initialisation complete, waiting for events...");
- // }
+  // Serial.println("IMU initialisation complete, waiting for events...");
+  // }
 }
 
 void StepDetection::updateStepCount(){
@@ -43,9 +44,19 @@ void StepDetection::updateStepCount(){
       
       // save the current count for comparison next check:
       lastStepCount = stepCount;
+      IsStepUpdate = true;
+      // Send distance data to BLE manager
+      //if(StepDetection::ble_manager != NULL)StepDetection::ble_manager->setDistance(stepCount);
     }
 }
-
+boolean StepDetection::getStepUpdate(){
+  if(IsStepUpdate){
+    IsStepUpdate = false;
+    return true;
+  }else{
+    return false;
+  }
+}
 void StepDetection::eventCallbacka(void){
     if (CurieIMU.stepsDetected()){
       movement();
@@ -53,6 +64,6 @@ void StepDetection::eventCallbacka(void){
     }
   }
 
-int StepDetection::movement(){
+void StepDetection::movement(){
   iammove = true; 
 }

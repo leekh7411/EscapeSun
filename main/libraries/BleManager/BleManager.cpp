@@ -1,4 +1,5 @@
 #include "BleManager.h"
+#include "arduino.h"
 BleManager::BleManager(){
   // Default Constructor
 }
@@ -10,7 +11,9 @@ BleManager::BleManager(
     BLEIntCharacteristic emergency,
     BLEIntCharacteristic limit_distance,
     BLEIntCharacteristic limit_heart_rate,
-    BLEIntCharacteristic limit_humidity
+    BLEIntCharacteristic limit_humidity,
+    BLEIntCharacteristic limit_temperature,
+    BLEIntCharacteristic limit_body_heat
   ){
   MAX = 10; cnt = 0; 
   TEMPERATURE = 0;
@@ -28,6 +31,8 @@ BleManager::BleManager(
   escSunService.addCharacteristic(limit_heart_rate);
   escSunService.addCharacteristic(limit_humidity);
   escSunService.addCharacteristic(limit_distance);
+  escSunService.addCharacteristic(limit_temperature);
+  escSunService.addCharacteristic(limit_body_heat);
   BLE.addService(escSunService);
   switch0.setValue(0);
   distance.setValue(0);
@@ -35,6 +40,8 @@ BleManager::BleManager(
   limit_distance.setValue(0);
   limit_heart_rate.setValue(0);
   limit_humidity.setValue(0);
+  limit_temperature.setValue(0);
+  limit_body_heat.setValue(0);
   const unsigned char values[] = {
     (const unsigned char)sensor_val[0],
     (const unsigned char)sensor_val[1],
@@ -48,7 +55,11 @@ BleManager::BleManager(
   limit_distance_value = 0;
   limit_heart_rate_value = 0;
   limit_humidity_value = 0;
+  limit_temperature_value = 0;
+  limit_body_heat_value = 0;
   distance_val = 0;
+  temp_distance_val = 0;
+  emergency_val = 0;
   IsDataChanged = false;
   IsEmergencyChanged = false;
   Serial.println("Escape Sun Ble Manager Peripheral setup finish!");
@@ -74,7 +85,9 @@ void BleManager::initInLoop(
     BLEIntCharacteristic emergency,
     BLEIntCharacteristic limit_distance,
     BLEIntCharacteristic limit_heart_rate,
-    BLEIntCharacteristic limit_humidity
+    BLEIntCharacteristic limit_humidity,
+    BLEIntCharacteristic limit_temperature,
+    BLEIntCharacteristic limit_body_heat
   ){
 
   // this is a testing module ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -112,7 +125,8 @@ void BleManager::initInLoop(
 
   if(IsEmergencyChanged){
     IsEmergencyChanged = false;
-    emergency.setValue(EMERGENCY_MODE);
+    emergency.setValue(emergency_val);
+    emergency_val = 0;
   }
 
   if(IsDistanceChanged){
@@ -137,19 +151,35 @@ void BleManager::initInLoop(
 
   if(limit_distance.written()){
     limit_distance_value = limit_distance.value();
-    //Serial.print("distance_value changed : ");
-    //Serial.println(limit_distance_value);
+    Serial.print("distance_value changed : ");
+    Serial.println(limit_distance_value);
   }
-  if(limit_heart_rate.written()){
+  /*if(limit_heart_rate.written()){
     limit_heart_rate_value = limit_heart_rate.value();
-    //Serial.print("heart_rate_value changed : ");
-    //Serial.println(limit_heart_rate_value);
-  }
+    Serial.print("heart_rate_value changed : ");
+    Serial.println(limit_heart_rate_value);
+  }*/
   if(limit_humidity.written()){
     limit_humidity_value = limit_humidity.value();
-    //Serial.print("humidity_value changed : ");
-    //Serial.println(limit_humidity_value);
+    Serial.print("humidity_value changed : ");
+    Serial.println(limit_humidity_value);
+  }
+  if(limit_temperature.written()){
+    limit_temperature_value = limit_temperature.value();
+    Serial.print("temperature_value changed : ");
+    Serial.println(limit_temperature_value);
+  }
+  if(limit_body_heat.written()){
+    limit_body_heat_value = limit_body_heat.value();
+    Serial.print("body_heat_value changed : ");
+    Serial.println(limit_body_heat_value);  
   }
 
 }
+
+
+void BleManager::setDistance(int dis){ 
+    IsDistanceChanged = true;
+    distance_val = dis;
+  }
 

@@ -63,8 +63,14 @@ private:
     int test_body_heat;
     int test_humidity;
 
+    // Movement Score Lable
     TimeCheck Movement_Time;
     int Movement_Score;
+
+    // Emergency CODE
+    int EMG_CODE;
+    int EMG_level_01;
+    int EMG_level_02;
 public:
     void init(BleManager *Manager);
     checkHeat();
@@ -89,7 +95,10 @@ public:
     bool heatExhaustion();
     bool heatStroke();
     void heatAllcheck(StepDetection stepdetect);
-
+    bool checkBuzzer();
+    inline int getEmergencyCode(){return (EMG_CODE % 100);}
+    int getEMGCODE_set01(int);
+    int getEMGCODE_set02(int);
 };
 
 
