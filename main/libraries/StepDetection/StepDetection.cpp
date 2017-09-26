@@ -15,6 +15,7 @@ StepDetection::StepDetection(){
 analog pin 0 사용
 */
 void StepDetection::init(){
+  //StepDetection::lastStepCount = 0;
   CurieIMU.begin();
   // turn on step detection mode:
   CurieIMU.setStepDetectionMode(CURIE_IMU_STEP_MODE_SENSITIVE);

@@ -36,7 +36,9 @@ private:
     temp_func mTemp;
     PulseSensor pulse;
 	RunningMedian median[MEDIAN_SIZE] = {RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE), RunningMedian(MEDIAN_MAX_SIZE)};
-	
+	// Check Heat Time
+    TimeCheck checkHeat_Time;
+
     // Temperature Score Lable
     int Temperature_Score_Stack[TEMPERATURE_STACK_SIZE] = {0,0,0};
     TimeCheck Temperature_Time;

@@ -32,6 +32,7 @@ checkHeat::checkHeat()
 	HeartRate_Time.init();
 	Humidity_Time.init();
 	Movement_Time.init();
+	checkHeat_Time.init();
 }
 
 void checkHeat::init(BleManager *Manager){
@@ -431,57 +432,63 @@ bool checkHeat::heatStroke(){
 }
 
 void checkHeat::heatAllcheck(StepDetection stepdetect){
-	int degree = 0;
-	if(heatStroke()){
-		degree = 3;
-	}
-	else if(heatExhaustion()){
-		degree = 2;
-	}
-	else if(heatCramps()){
-		degree = 1;
-	}
-
-	if(degree == 1){
-		// Advice Level 1 Emergency advice CODE x1
-		manager->setEmergency(getEMGCODE_set01(1));
-	}
-	else if(degree == 2){
-		// Advice Level 2 Emergency advice CODE x2
-		manager->setEmergency(getEMGCODE_set01(2));
-	}
-	else if(degree == 3){
-		// Advice Level 3 Emergency advice CODE x3 
-		manager->setEmergency(getEMGCODE_set01(3));
-	}else{
-		// Advice Level 0 Emergency advice CODE x0
-		manager->setEmergency(getEMGCODE_set01(0));
-	}
-
-	if(degree != 0 ){
-		if(tempDegree  == 0){
-			// In shade state Emergency advice CODE 0x
-			manager->setEmergency(getEMGCODE_set02(0));	
+	// Where is the Time Check? (ERROR)
+	if(checkHeat_Time.Secondtime() > SENSOR_CHECK_TIME){
+		checkHeat_Time.resetTime();
+		int degree = 0;
+		if(heatStroke()){
+			degree = 3;
 		}
-		else{
-			if(checkMovement(stepdetect) == 1){
-				// ... detect movement Emergency advice CODE 1x
-				manager->setEmergency(getEMGCODE_set02(1));	
+		else if(heatExhaustion()){
+			degree = 2;
+		}
+		else if(heatCramps()){
+			degree = 1;
+		}
+
+		if(degree == 1){
+			// Advice Level 1 Emergency advice CODE x1
+			manager->setEmergency(getEMGCODE_set01(1));
+		}
+		else if(degree == 2){
+			// Advice Level 2 Emergency advice CODE x2
+			manager->setEmergency(getEMGCODE_set01(2));
+		}
+		else if(degree == 3){
+			// Advice Level 3 Emergency advice CODE x3 
+			manager->setEmergency(getEMGCODE_set01(3));
+		}else{
+			// Advice Level 0 Emergency advice CODE x0
+			manager->setEmergency(getEMGCODE_set01(0));
+		}
+
+		if(degree != 0 ){
+			if(tempDegree  == 0){
+				// In shade state Emergency advice CODE 0x
+				manager->setEmergency(getEMGCODE_set02(0));	
 			}
 			else{
-				// silent.. Buzzer On! Emergency advice CODE 2x
-				manager->setEmergency(getEMGCODE_set02(2));
-				buzzer.turnOn();
-				checkBuzzer();
+				if(checkMovement(stepdetect) == 1){
+					// ... detect movement Emergency advice CODE 1x
+					manager->setEmergency(getEMGCODE_set02(1));	
+				}
+				else{
+					// silent.. Buzzer On! Emergency advice CODE 2x
+					manager->setEmergency(getEMGCODE_set02(2));
+					buzzer.turnOn();
+					checkBuzzer();
+				}
 			}
+		}else{
+			// Emergency advice CODE 0x
+			manager->setEmergency(getEMGCODE_set02(0));
 		}
-	}else{
-		// Emergency advice CODE 0x
-		manager->setEmergency(getEMGCODE_set02(0));
+
+		Serial.print("Current State : ");
+		Serial.println(getEmergencyCode());
 	}
 
-	Serial.print("Current State : ");
-	Serial.println(getEmergencyCode());
+
 
 }
 

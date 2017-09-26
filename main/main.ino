@@ -58,17 +58,21 @@ void loop()
 }
 void CheckLimit(){
   if(blemanager.checkLimitDistance()){
-    Serial.println("+---------------------------------+> Distance Alarm!");
+    Serial.println("----------- ALARM DISTANCE ----------");
+    buzzer.turnOn();
+    //stepdetect.init();
   }
   if(blemanager.checkLimitTemperature()){
-    Serial.println("+---------------------------------+> tamperature Alarm!");
+    buzzer.turnOn();
   }
   if(blemanager.checkLimitHumidity()){
-    Serial.println("+---------------------------------+> Humidity Alarm!");
+    buzzer.turnOn();
   }
   if(blemanager.checkLimitBodyHeat()){
-    Serial.println("+---------------------------------+> BodyHeat Alarm!");
+    buzzer.turnOn();
   }
+  buzzer.checkButtonOff();
+  
 }
 void ModeHeatScan(){
     blemanager.initInLoop(central,sensorData,distanceData,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity,limit_temperature,limit_body_heat);

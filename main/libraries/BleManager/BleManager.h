@@ -53,6 +53,7 @@ public:
 	inline bool checkLimitDistance(){
 		if((limit_distance_value != 0) && (limit_distance_value < distance_val)){
 			limit_distance_value = 0;
+			distance_val = 0;
 			return true;
 		}
 		else return false;
