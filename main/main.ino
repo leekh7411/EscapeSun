@@ -58,13 +58,10 @@ void loop()
   checkUserButtonEmergency();
 }
 void checkUserButtonEmergency(){
-  if(buzzer.userEmergencyCheck()){
-    blemanager.setEmergency(3); // parameter 3 -> emergency code '03'
-  }
+  checkheat.isLongPress();
 }
 void checkLimit(){
   if(blemanager.checkLimitDistance()){
-    Serial.println("----------- ALARM DISTANCE ----------");
     buzzer.turnOn();
     //stepdetect.init();
   }

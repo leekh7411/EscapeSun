@@ -1,6 +1,7 @@
 
 #include "Bboobboo.h"
 
+#include "arduino.h"
 Bboobboo::Bboobboo()
 {
     this->pinNum = BUZZER_PIN_NUMER;
@@ -22,10 +23,11 @@ void Bboobboo::turnOn()
 
 void Bboobboo::turnOnGapTime(int time_gap){
 	if(bzTimer.Milistime()>time_gap){
-		bzOnOffFlag != bzOnOffFlag;
+		bzOnOffFlag = !bzOnOffFlag;
 		bzTimer.resetTime();
 		if(bzOnOffFlag)Bboobboo::turnOn();
 		else Bboobboo::turnOff();
+		Serial.println("turn on/off the bz");
 	}
 }
 
@@ -50,34 +52,3 @@ bool Bboobboo::checkButtonOff(){
 	}   
 }
 
-
-
-bool Bboobboo::userEmergencyCheck(){
-	int buttonState = digitalRead(BUTTON_PIN_NUMBER);// Read the button state 
-	if(buttonState == LOW){// if button Push
-		if(IsEmergencyButtonOn == false){//   when first push
-			IsEmergencyButtonOn = true; // -> Init the flag
-			userButtonTimer.resetTime();// -> reset the timer
-		}else{
-			if(userButtonTimer.Secondtime() > 5){ 
-				// push time over 5 seconds.. then..
-				IsEmergencyButtonOn = false;	
-				userButtonTimer.resetTime();
-				Bboobboo::turnOff();
-				// Send the Emergency Messages
-				return true;
-			}else{
-				// push time under 5 senconds
-				// Buzzer (B! B! B! .... ) ON
-				Bboobboo::turnOnGapTime(100);// buzzer time gap : 100 ms
-			}
-		}
-	}else{ // if Not push
-		if(IsEmergencyButtonOn){ // Before emergency button push timer gone under 5 seconds, detached the button 
-			IsEmergencyButtonOn = false;
-		}else{
-			// default loop
-		}
-	}
-	return false;
-}

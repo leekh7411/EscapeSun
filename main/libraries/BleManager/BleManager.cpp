@@ -23,59 +23,38 @@ BleManager::BleManager(
   for(int i = 0 ; i < SENSOR_VAL_NUM ; i++)sensor_val[i] = 0;
 
   // BLE object init in 'CurieBLE.h' library
-  Serial.print("Ble init start..");
+  //Serial.print("Ble init start..");
   BLE.begin(); 
-  delay(100);
-  Serial.println("..Finish");
+  //Serial.println("..Finish");
 
   // Ble's Tag name
-  Serial.print("..init device name");
+  //Serial.print("..init device name");
   BLE.setLocalName("SUN"); 
-  delay(100);
-  Serial.println("..Finish");
+  //Serial.println("..Finish");
 
-  Serial.print("..init service and Characteristic..");
+  //Serial.print("..init service and Characteristic..");
   BLE.setAdvertisedService(escSunService); // set the Service
-   delay(10);
   escSunService.addCharacteristic(switch0); // add Characteristic in the Service
-   delay(10);
   escSunService.addCharacteristic(sensorData);
-   delay(10);
   escSunService.addCharacteristic(distance);
-   delay(10);
   escSunService.addCharacteristic(emergency);
-   delay(10);
   escSunService.addCharacteristic(limit_heart_rate);
-   delay(10);
   escSunService.addCharacteristic(limit_humidity);
-   delay(10);
   escSunService.addCharacteristic(limit_distance);
-   delay(10);
   escSunService.addCharacteristic(limit_temperature);
-   delay(10);
   escSunService.addCharacteristic(limit_body_heat);
-   delay(10);
   BLE.addService(escSunService);
-   delay(10);
-  Serial.println("..Finish");
+  //Serial.println("..Finish");
 
-  Serial.print("..init Characteristic value..");
+  //Serial.print("..init Characteristic value..");
   switch0.setValue(0);
-  delay(10);
   distance.setValue(0);
-  delay(10);
   emergency.setValue(0);
-  delay(10);
   limit_distance.setValue(0);
-  delay(10);
   limit_heart_rate.setValue(0);
-  delay(10);
   limit_humidity.setValue(0);
-  delay(10);
   limit_temperature.setValue(0);
-  delay(10);
   limit_body_heat.setValue(0);
-  delay(10);
   const unsigned char values[] = {
     (const unsigned char)sensor_val[0],
     (const unsigned char)sensor_val[1],
@@ -83,13 +62,11 @@ BleManager::BleManager(
     (const unsigned char)sensor_val[3]
   };
   sensorData.setValue(values,SENSOR_VAL_NUM);
-  delay(10);
-  Serial.println("..Finish");
+  //Serial.println("..Finish");
 
-  Serial.print("..init BLE advertise...");
+  //Serial.print("..init BLE advertise...");
   BLE.advertise();
-  delay(50);
-  Serial.println("..Finish");
+  //Serial.println("..Finish");
   
   IsDataChanged = false;
   mode = 0;
@@ -226,5 +203,39 @@ void BleManager::initInLoop(
 void BleManager::setDistance(int dis){ 
     IsDistanceChanged = true;
     distance_val = dis;
+}
+
+
+bool BleManager::checkLimitDistance(){
+    if((limit_distance_value != 0) && (limit_distance_value < distance_val)){
+      limit_distance_value = 0;
+      distance_val = 0;
+      return true;
+    }
+    else return false;
+}
+
+bool BleManager::checkLimitTemperature(){
+    if((limit_temperature_value != 0 )&& (limit_temperature_value < sensor_val[TEMPERATURE])){
+      limit_temperature_value = 0;
+      return true;
+    }
+    else return false;
+}
+
+bool BleManager::checkLimitHumidity(){
+  if((limit_humidity_value != 0) && (limit_humidity_value < sensor_val[HUMIDITY])){
+    limit_humidity_value = 0;
+    return true;
   }
+  else return false;
+}
+
+bool BleManager::checkLimitBodyHeat(){
+  if((limit_body_heat_value != 0 )&& (limit_body_heat_value < sensor_val[BODYHEAT])){
+    limit_body_heat_value = 0;
+    return true;
+  }
+  else return false;
+}
 

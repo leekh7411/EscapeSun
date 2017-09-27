@@ -9,7 +9,6 @@
 
 class Bboobboo
 {
-
 private:
     int pinNum;
     bool IsBzOn;
@@ -23,7 +22,6 @@ public:
     void turnOn();
     void turnOff();
     bool checkButtonOff();
-    bool userEmergencyCheck();
 };
 
 

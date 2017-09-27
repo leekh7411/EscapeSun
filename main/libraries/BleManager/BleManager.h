@@ -50,35 +50,10 @@ public:
 	inline int getLimitDistance(){return limit_distance_value;}
 	inline int getLimitHeartRate(){return limit_heart_rate_value;}
 	inline int getLimitHumidity(){return limit_humidity_value;}
-	inline bool checkLimitDistance(){
-		if((limit_distance_value != 0) && (limit_distance_value < distance_val)){
-			limit_distance_value = 0;
-			distance_val = 0;
-			return true;
-		}
-		else return false;
-	}
-	inline bool checkLimitTemperature(){
-		if((limit_temperature_value != 0 )&& (limit_temperature_value < sensor_val[TEMPERATURE])){
-			limit_temperature_value = 0;
-			return true;
-		}
-		else return false;
-	}
-	inline bool checkLimitHumidity(){
-		if((limit_humidity_value != 0) && (limit_humidity_value < sensor_val[HUMIDITY])){
-			limit_humidity_value = 0;
-			return true;
-		}
-		else return false;
-	}
-	inline bool checkLimitBodyHeat(){
-		if((limit_body_heat_value != 0 )&& (limit_body_heat_value < sensor_val[BODYHEAT])){
-			limit_body_heat_value = 0;
-			return true;
-		}
-		else return false;
-	}
+	bool checkLimitDistance();
+	bool checkLimitTemperature();
+	bool checkLimitHumidity();
+	bool checkLimitBodyHeat();
 	void setDistance(int dis);
 	inline void setEmergency(int _val){emergency_val = _val;IsEmergencyChanged = true;}
 	inline bool IsDistanceFunctionOn(){if(function_switch[0]==1)return true;else return false;}

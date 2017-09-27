@@ -89,16 +89,30 @@ void checkHeat::isLongPress(){
       int buttonState = digitalRead(13);    
       if(buttonState == LOW){
       	long currentMillis = millis();
-		long laterMillis = millis();         
+		long laterMillis = millis();
+		bool bzFlag = true;         
       	while(laterMillis-currentMillis < 5000){
+      		if(laterMillis-currentMillis > 1000){
+      			if(bzFlag){
+      				buzzer.turnOn();
+      				bzFlag = false;
+      			}
+      		}
+
       		laterMillis = millis();
       		if(buttonState == HIGH){
+      			Serial.println("------------------> User Emergency OFF!");
+      			buzzer.turnOff();
       			return;
       		}
+      		buttonState = digitalRead(13);
       	}
       	// send message to smartphone hi:
-      	//manager->setIntSensorValue(, int(119));
-      } 
+      	// manager->setIntSensorValue(, int(119));
+      	manager->setEmergency(3);
+      	Serial.println("------------------> User Emergency ON!");
+      	buzzer.turnOff();
+    } 
 }
 void checkHeat::checkBodyTemp(float bodyTemperature)
 {
