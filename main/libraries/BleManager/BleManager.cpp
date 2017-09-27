@@ -57,9 +57,9 @@ BleManager::BleManager(
    delay(10);
   BLE.addService(escSunService);
    delay(10);
-   Serial.println("..Finish");
+  Serial.println("..Finish");
 
-   Serial.print("..init Characteristic value..");
+  Serial.print("..init Characteristic value..");
   switch0.setValue(0);
   delay(10);
   distance.setValue(0);

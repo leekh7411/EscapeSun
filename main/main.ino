@@ -54,9 +54,15 @@ void loop()
 {  
   //if(blemanager.IsHeatScanFunctionOn())ModeHeatScan();
   ModeHeatScan();
-  CheckLimit();
+  checkLimit();
+  checkUserButtonEmergency();
 }
-void CheckLimit(){
+void checkUserButtonEmergency(){
+  if(buzzer.userEmergencyCheck()){
+    blemanager.setEmergency(3); // parameter 3 -> emergency code '03'
+  }
+}
+void checkLimit(){
   if(blemanager.checkLimitDistance()){
     Serial.println("----------- ALARM DISTANCE ----------");
     buzzer.turnOn();

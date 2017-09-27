@@ -1,6 +1,7 @@
 ﻿#include "TimeCheck.h"  
 #include "arduino.h"
 TimeCheck::TimeCheck(){
+	
 }
 
 /*
@@ -11,7 +12,10 @@ analog pin 0 사용
 void TimeCheck::init(){
   prev_time = 0;
 }
-
+long TimeCheck::Milistime(){
+	current_time = millis();
+	return (current_time-prev_time);
+}
 long TimeCheck::Secondtime(){
   current_time = millis();
   return (current_time-prev_time)/1000;
