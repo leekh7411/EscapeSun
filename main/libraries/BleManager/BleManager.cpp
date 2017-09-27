@@ -81,6 +81,7 @@ BleManager::BleManager(
   IsDataChanged = false;
   IsEmergencyChanged = false;
   Serial.println("Escape Sun Ble Manager Peripheral setup finish!");
+  buzzer = Bboobboo();
 }
 
 void BleManager::setIntSensorValue(int index, int value){
@@ -144,7 +145,7 @@ void BleManager::initInLoop(
   if(IsEmergencyChanged){
     IsEmergencyChanged = false;
     emergency.setValue(emergency_val);
-    emergency_val = 0;
+    //emergency_val = 0;
   }
 
   if(IsDistanceChanged){
@@ -197,6 +198,26 @@ void BleManager::initInLoop(
     Serial.println(limit_body_heat_value);  
   }
 
+
+  if(checkLimitDistance()){
+    buzzer.turnOn();
+    Serial.println("-------ALARM DISTANCE--------");
+  }
+  if(checkLimitTemperature()){
+    buzzer.turnOn();
+    Serial.println("-------ALARM TEMPERATURE--------");
+  }
+  if(checkLimitHumidity()){
+    buzzer.turnOn();
+    Serial.println("-------ALARM HUMIDITY--------");
+  }
+  if(checkLimitBodyHeat()){
+    buzzer.turnOn();
+    Serial.println("-------ALARM BODYHEAT--------");
+  }
+  buzzer.checkButtonOff();
+
+
 }
 
 
@@ -239,3 +260,13 @@ bool BleManager::checkLimitBodyHeat(){
   else return false;
 }
 
+int BleManager::getDistance(){
+  return distance_val;
+}
+
+void BleManager::setEmergency(int _val){
+  emergency_val = _val;
+  Serial.print("> 현재 BLE 응급 식별 코드 : ");
+  Serial.println(emergency_val);
+  IsEmergencyChanged = true;
+}

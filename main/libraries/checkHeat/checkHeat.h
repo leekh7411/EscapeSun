@@ -13,7 +13,7 @@
 #define HEART_RATE_STACK_SIZE 7
 #define HUMIDITY_STACK_SIZE 3
 #define MEDIAN_SIZE		4
-#define SENSOR_CHECK_TIME 10
+#define SENSOR_CHECK_TIME 1
 class checkHeat
 {
 private:
@@ -26,7 +26,7 @@ private:
     int heartDegree;
     int humidityDegree;
     float bodyTemp;
-
+    bool EmergencyAlarmAlert;
     float humidity;
     int temp;
     int heart;

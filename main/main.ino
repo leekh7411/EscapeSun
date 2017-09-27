@@ -52,34 +52,11 @@ int tempDelay = 0;
 int tempHumidDelay = 0;
 void loop()
 {  
-  //if(blemanager.IsHeatScanFunctionOn())ModeHeatScan();
   ModeHeatScan();
-  checkLimit();
-  checkUserButtonEmergency();
-}
-void checkUserButtonEmergency(){
-  checkheat.isLongPress();
-}
-void checkLimit(){
-  if(blemanager.checkLimitDistance()){
-    buzzer.turnOn();
-    //stepdetect.init();
-  }
-  if(blemanager.checkLimitTemperature()){
-    buzzer.turnOn();
-  }
-  if(blemanager.checkLimitHumidity()){
-    buzzer.turnOn();
-  }
-  if(blemanager.checkLimitBodyHeat()){
-    buzzer.turnOn();
-  }
-  buzzer.checkButtonOff();
-  
 }
 void ModeHeatScan(){
     blemanager.initInLoop(central,sensorData,distanceData,switch0,emergency,limit_distance,limit_heart_rate,limit_humidity,limit_temperature,limit_body_heat);
-     delay(50);
+    delay(50);
     if (!stepdetect.stepEventsEnabeled){
        stepdetect.updateStepCount();
     }
@@ -92,8 +69,8 @@ void ModeHeatScan(){
     // if 200ms have passed, check the heart rate measurement:
     if (currentMillis - previousMillis >= 200) {previousMillis = currentMillis;}
     if(tempHumidDelay > 1000){
-       checkheat.allcheck(stepdetect);// --> Original MODE
-       //checkheat.checkTestData(stepdetect);// --> Test MODE
+       //checkheat.allcheck(stepdetect);// --> Original MODE
+       checkheat.checkTestData(stepdetect);// --> Test MODE
        tempHumidDelay = 0;
     }
     delay(delayMsec);

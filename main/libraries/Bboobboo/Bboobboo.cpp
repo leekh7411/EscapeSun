@@ -42,7 +42,7 @@ bool Bboobboo::checkButtonOff(){
 	if(IsBzOn){
 		int buttonState = digitalRead(BUTTON_PIN_NUMBER);    
 		if(buttonState == LOW){
-			Bboobboo::turnOff();
+			turnOff();
 			return true;
 		}else{
 			return false;

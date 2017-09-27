@@ -1,6 +1,7 @@
 #ifndef __BLEMANAGER_H
 #define __BLEMANAGER_H
 #include "Arduino.h"
+#include "Bboobboo.h"
 #include <CurieBLE.h>
 #define SENSOR_VAL_NUM 4
 #define EMERGENCY_MODE 119
@@ -16,6 +17,7 @@ private:
  	int distance_val, temp_distance_val;
  	bool IsDistanceChanged,IsEmergencyChanged;
  	int emergency_val;
+ 	Bboobboo buzzer;
 public:
 	int TEMPERATURE,BODYHEAT,HEARTRATE,HUMIDITY;
 	 	
@@ -55,7 +57,8 @@ public:
 	bool checkLimitHumidity();
 	bool checkLimitBodyHeat();
 	void setDistance(int dis);
-	inline void setEmergency(int _val){emergency_val = _val;IsEmergencyChanged = true;}
+	int getDistance();
+	void setEmergency(int _val);
 	inline bool IsDistanceFunctionOn(){if(function_switch[0]==1)return true;else return false;}
 	inline bool IsHeartRateFunctionOn(){if(function_switch[1]==1)return true;else return false;}
 	inline bool IsHeatScanFunctionOn(){if(function_switch[2]==1)return true;else return false;}

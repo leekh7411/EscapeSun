@@ -33,6 +33,7 @@ checkHeat::checkHeat()
 	Humidity_Time.init();
 	Movement_Time.init();
 	checkHeat_Time.init();
+	EmergencyAlarmAlert = false;
 }
 
 void checkHeat::init(BleManager *Manager){
@@ -109,7 +110,7 @@ void checkHeat::isLongPress(){
       	}
       	// send message to smartphone hi:
       	// manager->setIntSensorValue(, int(119));
-      	manager->setEmergency(3);
+      	manager->setEmergency(getEMGCODE_set02(3));
       	Serial.println("------------------> User Emergency ON!");
       	buzzer.turnOff();
     } 
@@ -118,8 +119,10 @@ void checkHeat::checkBodyTemp(float bodyTemperature)
 {
 	if(BodyHeat_Time.Secondtime() > SENSOR_CHECK_TIME){
 		BodyHeat_Time.resetTime();
-		Serial.print("bodytemp= " );
-		Serial.println(bodyTemperature);
+		Serial.println("-----------------------------------------------------------");
+		Serial.print("체온 : ");
+		Serial.print(bodyTemperature);
+		Serial.println(" ℃");
 		if(bodyTemperature < 37){
 			bodyTempDegree = 0;
 		}
@@ -151,7 +154,7 @@ void checkHeat::checkBodyTemp(float bodyTemperature)
 		}
 
 		// Print Score
-		Serial.print("BodyHeat_Score : ");
+		Serial.print("/ 10초당 누적 점수 : ");
 		Serial.println(BodyHeat_Score);	
 	}
 	
@@ -161,8 +164,9 @@ void checkHeat::checkTemp(int temperature)
 {
 	if(Temperature_Time.Secondtime() > SENSOR_CHECK_TIME){
 		Temperature_Time.resetTime();
-		Serial.print("temp= " );
-		Serial.println(temperature);
+		Serial.print("외부온도 : " );
+		Serial.print(temperature);
+		Serial.println(" ℃");
 		if(temperature >= 30 && temperature < 34 ){
 			tempDegree = 1;
 			Temperature_Score_Stack[0]++;	
@@ -188,7 +192,7 @@ void checkHeat::checkTemp(int temperature)
 			Temperature_Score += (Temperature_Score_Stack[i] * (i+1));
 		}
 		
-		Serial.print("Temperature_Score : ");
+		Serial.print("/ 10초당 누적 점수 : ");
 		Serial.println(Temperature_Score);
 	}
 }
@@ -211,8 +215,8 @@ void checkHeat::checkHeart(int heartRate)
 {
 	if(HeartRate_Time.Secondtime() > SENSOR_CHECK_TIME){
 		HeartRate_Time.resetTime();
-		Serial.print("pulse!!= " );
-		Serial.println(heartRate);
+		//Serial.print("pulse!!= " );
+		//Serial.println(heartRate);
 
 		if(heartRate < 50){
 			heartDegree = 3;
@@ -246,8 +250,8 @@ void checkHeat::checkHeart(int heartRate)
 		}
 
 		// Print Score
-		Serial.print("HeartRate_Score : ");
-		Serial.println(HeartRate_Score);	
+		// Serial.print("HeartRate_Score : ");
+		// Serial.println(HeartRate_Score);	
 	}										
 	
 }
@@ -255,8 +259,9 @@ void checkHeat::checkHeart(int heartRate)
 void checkHeat::checkHumidity(int humidity){
 	if(Humidity_Time.Secondtime() > SENSOR_CHECK_TIME){
 		Humidity_Time.resetTime();
-		Serial.print("Humidity = ");
-		Serial.println(humidity);	
+		Serial.print("습도 : ");
+		Serial.print(humidity);
+		Serial.println(" (Percent)");	
 		if(0 <=  humidity && humidity < 60 ){
 			humidityDegree = 0;
 		}else if(70 <=  humidity && humidity < 90 ){
@@ -283,7 +288,7 @@ void checkHeat::checkHumidity(int humidity){
 		}
 
 		// Print Score
-		Serial.print("Humidity_Score : ");
+		Serial.print("/ 10초당 누적 점수 : ");
 		Serial.println(Humidity_Score);	
 
 	}
@@ -379,6 +384,8 @@ void checkHeat::checkTestData(StepDetection stepdetect){
 	checkHeart(test_heart_rate);
 	checkHumidity(test_humidity);
 	heatAllcheck(stepdetect);
+	// Test?
+	isLongPress();
 }
 
 
@@ -407,11 +414,13 @@ void checkHeat::allcheck(StepDetection stepdetect){
 	currentMillis = millis();	
 	checkMedian();
 	heatAllcheck(stepdetect);
+	// Test?
+	isLongPress();
 }
 
 
 bool checkHeat::heatCramps(){
-	if(Humidity_Score + Temperature_Score > 600){
+	if(Humidity_Score + Temperature_Score > 10){// 600
 		return true;
 	}
 	return false;
@@ -420,12 +429,13 @@ bool checkHeat::heatCramps(){
 bool checkHeat::heatExhaustion(){
 
 	if(bodyTempDegree > 1){
-		if(Humidity_Score + Temperature_Score + HeartRate_Score > 1200){
+		if(Humidity_Score + Temperature_Score + HeartRate_Score > 120){//1200
 			return true;
+		
 		}
 	}
 	else if(bodyTempDegree >= 0){
-		if(Humidity_Score + Temperature_Score + HeartRate_Score > 1500){
+		if(Humidity_Score + Temperature_Score + HeartRate_Score > 150){//1500
 			return true;
 		}
 	}
@@ -438,7 +448,7 @@ bool checkHeat::heatStroke(){
 		return true;
 	}
 	else if(bodyTempDegree > 2){
-		if(Humidity_Score + Temperature_Score + HeartRate_Score > 900){
+		if(Humidity_Score + Temperature_Score + HeartRate_Score > 90){//900
 			return true;
 		}
 	}
@@ -446,9 +456,36 @@ bool checkHeat::heatStroke(){
 }
 
 void checkHeat::heatAllcheck(StepDetection stepdetect){
+
+	// Infinity Loop --> After send the Emergency Message and alert Buzzer
+	while(EmergencyAlarmAlert){
+		int buttonState = digitalRead(13);    
+        if(buttonState == LOW){  
+            deBoo();
+            Serial.println("<긴급 구호 버저가 종료되었습니다>");
+        }
+        Serial.println("<기기를 종료 해 주세요. 버저를 끄려면 버튼을 눌러주세요>");
+        delay(500); 
+	} 
+
+
+
 	// Where is the Time Check? (ERROR)
 	if(checkHeat_Time.Secondtime() > SENSOR_CHECK_TIME){
 		checkHeat_Time.resetTime();
+		// 움직임 : 있음/없음
+		int distance_val = manager->getDistance();
+		Serial.print("이동거리 : ");
+		Serial.print(distance_val);
+		Serial.println(" (M)");
+		// 누적점수 : 누적점수총합
+		int total_score = Temperature_Score + BodyHeat_Score + Humidity_Score;
+		Serial.print("총 누적 점수 : ");
+		Serial.print(total_score);
+		Serial.println(" 점");
+
+
+
 		int degree = 0;
 		if(heatStroke()){
 			degree = 3;
@@ -463,32 +500,45 @@ void checkHeat::heatAllcheck(StepDetection stepdetect){
 		if(degree == 1){
 			// Advice Level 1 Emergency advice CODE x1
 			manager->setEmergency(getEMGCODE_set01(1));
+			Serial.println("평가 : 온열질환의 위험이 다소 있습니다. 열경련이나 열실신이 의심되니 쉬면서 다니세요. ");	
 		}
 		else if(degree == 2){
 			// Advice Level 2 Emergency advice CODE x2
 			manager->setEmergency(getEMGCODE_set01(2));
+			Serial.println("평가 : 더운 날씨에 너무 오래 야외에 있으신건 아닌가요? 일사병이 발생 할 수 있으니 조금 쉬시는걸 추천합니다. ");
 		}
 		else if(degree == 3){
 			// Advice Level 3 Emergency advice CODE x3 
 			manager->setEmergency(getEMGCODE_set01(3));
+			Serial.println("평가 : 외부 환경과 신체지수가 많이 위험해 보입니다. 열사병의 위험이 있으니 조심하셔야 합니다! ");
 		}else{
 			// Advice Level 0 Emergency advice CODE x0
 			manager->setEmergency(getEMGCODE_set01(0));
+			Serial.println("평가 : 야외활동을 하기 좋은 날입니다. ");
 		}
 
 		if(degree != 0 ){
 			if(tempDegree  == 0){
 				// In shade state Emergency advice CODE 0x
 				manager->setEmergency(getEMGCODE_set02(0));	
+				Serial.println("조언 : 지금 처럼 쉬어주면 온열 질환을 예방할 수 있습니다 ");
+				Serial.print("식별 코드 : ");
+    				Serial.println(getEmergencyCode());
 			}
 			else{
 				if(checkMovement(stepdetect) == 1){
 					// ... detect movement Emergency advice CODE 1x
 					manager->setEmergency(getEMGCODE_set02(1));	
+					Serial.println("조언 : 계속 움직이시면 위험할 수도 있어요. 잠시 휴식을 취해주세요");	
+					Serial.print("식별 코드 : ");
+    				Serial.println(getEmergencyCode());
 				}
 				else{
 					// silent.. Buzzer On! Emergency advice CODE 2x
 					manager->setEmergency(getEMGCODE_set02(2));
+					Serial.println("조언 : 좀 더 시원한 곳에서 쉬시는걸 추천합니다. 하지만 지금 의식이 있으신지 의심됩니다. 버저 버튼을 눌러주세요!");
+					Serial.print("식별 코드 : ");
+    				Serial.println(getEmergencyCode());
 					buzzer.turnOn();
 					checkBuzzer();
 				}
@@ -496,13 +546,12 @@ void checkHeat::heatAllcheck(StepDetection stepdetect){
 		}else{
 			// Emergency advice CODE 0x
 			manager->setEmergency(getEMGCODE_set02(0));
+			Serial.println("조언 : 지금 처럼 쉬어주면 온열 질환을 예방할 수 있습니다 ");
+			Serial.print("식별 코드 : ");
+    				Serial.println(getEmergencyCode());
 		}
-
-		Serial.print("Current State : ");
-		Serial.println(getEmergencyCode());
+		
 	}
-
-
 
 }
 
@@ -512,12 +561,19 @@ bool checkHeat::checkBuzzer(){
 	long laterMillis;
 	while(1){
     	laterMillis = millis();
-    	if(laterMillis-currentMillis > 30000){
-    			Serial.println("time 30 over");
+    	if(laterMillis-currentMillis > 10000){// 30s
+    			Serial.println("time 10 over");
     			if(!flag){
     				// silent.. Buzzer On! Emergency advice CODE 3x
     				manager->setEmergency(getEMGCODE_set02(3));
+    				Serial.println("+ 조언 : 버저 버튼이 30초간 눌러지지 않아 긴급 구조 문자가 발송되었습니다. 지금 몸에 이상이 있으시다면 꼭 쉬어야 합니다. ");
+    				manager->setEmergency(getEmergencyCode());
+    				Serial.print("+ 식별 코드 : ");
+    				Serial.println(getEmergencyCode());
     				flag = true;
+    				buzzer.turnOn();
+    				EmergencyAlarmAlert = true;
+    				return false;
     			}
     			deBoo();
     			delay(1500);
@@ -527,7 +583,7 @@ bool checkHeat::checkBuzzer(){
         int buttonState = digitalRead(13);    
         if(buttonState == LOW){  
             deBoo();
-            break;
+            return true;
         } 
     }
     return true;
